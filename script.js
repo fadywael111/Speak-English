@@ -16,7 +16,7 @@ const students = [
     { name: "بتول ادوارد", score: 41, cls: 2, guardian: "", phone: "201226313147" },
     { name: "جاسيكا عماد", score: 36, cls: 1, guardian: "", phone: "" },
     { name: "ماري شحات", score: 46, cls: 6, guardian: "", phone: "201288412742" },
-    { name: "جومانا حلمي", score: 36, cls: 2, guardian: "", phone: "20127939808" },
+    { name: "جومانا حليم", score: 36, cls: 2, guardian: "", phone: "201279396808" },
     { name: "ميرولا ناصر", score: 0, cls: 0, guardian: "", phone: "20109265753" },
     { name: "ايريني سلامه", score: 0, cls: 0, guardian: "", phone: "201271736600" },
     { name: "جيسيكا", score: 0, cls: 0, guardian: "", phone: "201271185009" },
