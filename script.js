@@ -20,7 +20,7 @@ const students = [
     { name: "ميرولا ناصر", score: 0, cls: 0, guardian: "", phone: "20109265753" },
     { name: "ايريني سلامه", score: 0, cls: 0, guardian: "", phone: "201271736600" },
     { name: "جيسيكا", score: 0, cls: 0, guardian: "", phone: "201271185009" },
-    { name:  "مادونا روماني", score: 0, cls: 0, guatdian: "", phone: "20 12 27477546" },
+    { name:  "مادونا روماني", score: 0, cls: 0, guatdian: "", phone: "201227477546" },
 ];
 
 /* ── Helpers ─────────────────────────────────────────────────── */
