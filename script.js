@@ -1247,3 +1247,124 @@ function transformQuizUI(lessonId, url) {
     `;
     card.appendChild(actionsDiv);
 }
+
+/* ── Custom Modern Calendar Logic ──────────────────────────────── */
+let currentViewDate = new Date();
+
+function initCalendar() {
+    const dtInput = document.getElementById('attendanceDate');
+    const wrapper = document.querySelector('.date-trigger-wrapper');
+    if (!dtInput || !wrapper) return;
+
+    // Trigger calendar only via the wrapper to avoid double-toggle
+    wrapper.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleCalendar();
+    });
+
+    dtInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleCalendar();
+        }
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+        const modal = document.getElementById('customCalendar');
+        const trigger = document.querySelector('.date-trigger-wrapper');
+        if (modal && !modal.classList.contains('hidden')) {
+            if (!trigger.contains(e.target)) {
+                modal.classList.add('hidden');
+            }
+        }
+    });
+
+    // Prevent closing when clicking inside the calendar itself
+    const modal = document.getElementById('customCalendar');
+    if (modal) {
+        modal.addEventListener('mousedown', (e) => e.stopPropagation());
+        modal.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    renderCalendar();
+}
+
+function toggleCalendar() {
+    const modal = document.getElementById('customCalendar');
+    if (modal.classList.contains('hidden')) {
+        const dtInput = document.getElementById('attendanceDate');
+        if (dtInput.value) {
+            // Split to avoid timezone shifts from new Date(str)
+            const parts = dtInput.value.split('-');
+            currentViewDate = new Date(parts[0], parts[1] - 1, parts[2]);
+        } else {
+            currentViewDate = new Date();
+        }
+        renderCalendar();
+        modal.classList.remove('hidden');
+    } else {
+        modal.classList.add('hidden');
+    }
+}
+
+function renderCalendar() {
+    const monthYearEl = document.getElementById('calendarMonthYear');
+    const daysContainer = document.getElementById('calendarDays');
+    if (!monthYearEl || !daysContainer) return;
+
+    const year = currentViewDate.getFullYear();
+    const month = currentViewDate.getMonth();
+
+    monthYearEl.textContent = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(currentViewDate);
+
+    daysContainer.innerHTML = '';
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const totalDays = new Date(year, month + 1, 0).getDate();
+
+    for (let i = 0; i < firstDay; i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.className = 'calendar-day empty';
+        daysContainer.appendChild(emptyDay);
+    }
+
+    const today = new Date();
+    const selectedVal = document.getElementById('attendanceDate').value;
+
+    for (let d = 1; d <= totalDays; d++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const isToday = today.getDate() === d && today.getMonth() === month && today.getFullYear() === year;
+        const isSelected = selectedVal === dateStr;
+
+        const dayEl = document.createElement('div');
+        dayEl.className = `calendar-day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`;
+        dayEl.textContent = d;
+        dayEl.onclick = (e) => {
+            e.stopPropagation();
+            selectCalendarDate(dateStr);
+        };
+        daysContainer.appendChild(dayEl);
+    }
+}
+
+function changeMonth(dir) {
+    currentViewDate.setMonth(currentViewDate.getMonth() + dir);
+    renderCalendar();
+}
+
+function selectCalendarDate(dateStr) {
+    const dtInput = document.getElementById('attendanceDate');
+    dtInput.value = dateStr;
+    document.getElementById('customCalendar').classList.add('hidden');
+    fetchAttendanceData();
+}
+
+// Intercept init to setup calendar
+const originalInitAttendanceUI = initAttendanceUI;
+initAttendanceUI = async function() {
+    await originalInitAttendanceUI();
+    initCalendar();
+};
