@@ -596,7 +596,8 @@ async function fetchAttendanceData() {
             const data = await res.json();
             fileSha = data.sha;
             // Decode base64
-            const decoded = decodeURIComponent(Array.prototype.map.call(atob(data.content), (c) => {
+            const b64 = data.content.replace(/\s/g, '');
+            const decoded = decodeURIComponent(Array.prototype.map.call(atob(b64), (c) => {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
             attendanceRecords = JSON.parse(decoded);
@@ -1084,10 +1085,18 @@ async function fetchCurriculumData() {
             headers: headers
         });
 
+        if (res.status === 404) {
+            // File doesn't exist yet, that's fine
+            curriculumData = {};
+            curriculumSha = '';
+            return;
+        }
+
         if (res.ok) {
             const data = await res.json();
             curriculumSha = data.sha;
-            const decoded = decodeURIComponent(Array.prototype.map.call(atob(data.content), (c) => {
+            const b64 = data.content.replace(/\s/g, '');
+            const decoded = decodeURIComponent(Array.prototype.map.call(atob(b64), (c) => {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
             curriculumData = JSON.parse(decoded);
@@ -1368,3 +1377,5 @@ initAttendanceUI = async function() {
     await originalInitAttendanceUI();
     initCalendar();
 };
+// Start the App
+document.addEventListener('DOMContentLoaded', init);
