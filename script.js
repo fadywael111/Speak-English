@@ -20,14 +20,14 @@ const students = [
     { name: "ميرولا ناصر", score: 0, cls: 0, guardian: "", phone: "20109265753" },
     { name: "ايريني سلامه", score: 0, cls: 0, guardian: "", phone: "201271736600" },
     { name: "جيسيكا", score: 0, cls: 0, guardian: "", phone: "201271185009" },
-    { name:  "مادونا روماني", score: 0, cls: 0, guatdian: "", phone: "201227477546" },
+    { name: "مادونا روماني", score: 0, cls: 0, guatdian: "", phone: "201227477546" },
 ];
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 const WA_ICON = `<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>`;
 
 function scoreLevel(s) {
-    return s >= 75 ? 'high' : s >= 60 ? 'mid' : 'low';
+    return s >= 40 ? 'high' : s >= 30 ? 'mid' : 'low';
 }
 
 const COPY_ICON = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"/></svg>`;
@@ -511,10 +511,10 @@ async function initAttendanceUI() {
 async function fetchAttendanceData() {
     const list = document.getElementById('attendanceHistory');
     list.innerHTML = `<div style="padding:20px; text-align:center; color:var(--gray-500);">Syncing from GitHub...</div>`;
-    renderAttendanceGrid();
 
     try {
-        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}?t=${Date.now()}`, {
+            cache: 'no-store',
             headers: {
                 'Authorization': `token ${ghToken}`,
                 'Accept': 'application/vnd.github.v3+json'
@@ -524,7 +524,7 @@ async function fetchAttendanceData() {
         if (res.ok) {
             const data = await res.json();
             fileSha = data.sha;
-            // Decode base64 - FIXED: Using proper encoding/decoding
+            // Decode base64
             const decoded = decodeURIComponent(Array.prototype.map.call(atob(data.content), (c) => {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
@@ -543,6 +543,11 @@ async function fetchAttendanceData() {
     }
 
     renderAttendanceHistory();
+
+    // Automatically load the checkboxes for the currently selected date (if it exists)
+    const currentDt = document.getElementById('attendanceDate').value;
+    const existingRecord = attendanceRecords.find(r => r.date === currentDt);
+    renderAttendanceGrid(existingRecord || null);
 }
 
 function renderAttendanceGrid(sessionData = null) {
@@ -566,6 +571,21 @@ function renderAttendanceGrid(sessionData = null) {
                 </label>
             `;
     }).join('');
+
+    updateLiveSummary();
+}
+
+function updateLiveSummary() {
+    let presentCount = 0;
+    students.forEach((s, idx) => {
+        const check = document.getElementById(`attCheck_${idx}`);
+        if (check && check.checked) presentCount++;
+    });
+    const absentCount = students.length - presentCount;
+    const elP = document.getElementById('liveAttPresent');
+    const elA = document.getElementById('liveAttAbsent');
+    if (elP) elP.textContent = presentCount;
+    if (elA) elA.textContent = absentCount;
 }
 
 function toggleAttendanceCard(idx) {
@@ -573,6 +593,8 @@ function toggleAttendanceCard(idx) {
     const check = document.getElementById(`attCheck_${idx}`);
     if (check.checked) card.classList.add('present');
     else card.classList.remove('present');
+
+    updateLiveSummary();
 }
 
 function loadSessionData(dateStr) {
@@ -590,11 +612,6 @@ async function pushAttendanceData() {
     const dt = document.getElementById('attendanceDate').value;
     if (!dt) return alert("Please select a date first.");
 
-    const btn = document.getElementById('saveAttBtn');
-    const originalText = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = `<svg class="animate-spin" viewBox="0 0 24 24" fill="none" width="20" height="20" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Syncing...`;
-
     const presentIds = [];
     students.forEach((s, idx) => {
         if (document.getElementById(`attCheck_${idx}`).checked) presentIds.push(s.name);
@@ -608,14 +625,22 @@ async function pushAttendanceData() {
 
     attendanceRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
 
+    await syncAttendanceToGitHub(`Update attendance for ${dt}`);
+}
+
+async function syncAttendanceToGitHub(commitMessage = 'Update attendance data') {
+    const btn = document.getElementById('saveAttBtn');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<svg class="animate-spin" viewBox="0 0 24 24" fill="none" width="20" height="20" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Syncing...`;
+
     try {
-        // FIXED: Using proper base64 encoding for UTF-8
         const contentStr = btoa(encodeURIComponent(JSON.stringify(attendanceRecords, null, 2)).replace(/%([0-9A-F]{2})/g, (match, p1) => {
             return String.fromCharCode('0x' + p1);
         }));
 
         const body = {
-            message: `Update attendance for ${dt}`,
+            message: commitMessage,
             content: contentStr,
             branch: 'main'
         };
@@ -634,21 +659,26 @@ async function pushAttendanceData() {
         if (!res.ok) throw new Error('Push failed');
 
         const data = await res.json();
-        fileSha = data.content.sha; // Update sha for future writes
+        fileSha = data.content.sha;
 
         const msg = document.getElementById('attendanceMessage');
-        msg.classList.remove('hidden');
-        setTimeout(() => msg.classList.add('hidden'), 3000);
+        if (msg) {
+            msg.classList.remove('hidden');
+            setTimeout(() => msg.classList.add('hidden'), 3000);
+        }
 
         renderAttendanceHistory();
     } catch (e) {
         console.error(e);
-        alert("Failed to save to GitHub. Check your connection and token permissions.");
+        alert("Failed to sync with GitHub. Please check your token and connection.");
     } finally {
         btn.disabled = false;
         btn.innerHTML = originalText;
     }
 }
+
+let activeContextDate = null;
+let longPressTimer = null;
 
 function renderAttendanceHistory() {
     const list = document.getElementById('attendanceHistory');
@@ -658,7 +688,12 @@ function renderAttendanceHistory() {
     }
 
     list.innerHTML = attendanceRecords.map(r => `
-                <div class="history-card" onclick="loadSessionData('${r.date}')" title="Click to edit session">
+                <div class="history-card" 
+                     onclick="loadSessionData('${r.date}')" 
+                     oncontextmenu="handleSessionContextMenu(event, '${r.date}')"
+                     ontouchstart="handleTouchStart(event, '${r.date}')"
+                     ontouchend="handleTouchEnd(event)"
+                     title="Click to edit, Right-click for options">
                     <div class="history-date">
                         <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
@@ -719,12 +754,112 @@ document.addEventListener('DOMContentLoaded', () => {
     drawWaveform('waveform2', '#6366f1', '#a78bfa');
 });
 
+async function addNewSession() {
+    const dtInput = document.getElementById('attendanceDate');
+    const today = new Date().toISOString().split('T')[0];
+
+    // Use input date if changed, otherwise use today
+    const selectedDate = dtInput.value || today;
+
+    const existing = attendanceRecords.find(r => r.date === selectedDate);
+    if (existing) {
+        alert("A session for this date already exists. Loading its data...");
+        loadSessionData(selectedDate);
+        return;
+    }
+
+    // Create new empty record
+    const newRecord = {
+        date: selectedDate,
+        present: [],
+        total: students.length
+    };
+
+    attendanceRecords.unshift(newRecord);
+    attendanceRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    dtInput.value = selectedDate;
+    renderAttendanceGrid(newRecord);
+    renderAttendanceHistory();
+
+    // Automatically save this new skeleton to GitHub
+    await syncAttendanceToGitHub(`Added new session for ${selectedDate}`);
+
+    // Jump to top of history
+    const historyList = document.getElementById('attendanceHistory');
+    if (historyList) historyList.scrollTop = 0;
+}
+
 /* ── Dark Mode ───────────────────────────────────────────────── */
 function toggleDarkMode() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const newTheme = isDark ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('eduTrack_theme', newTheme);
+}
+
+function handleSessionContextMenu(e, date) {
+    e.preventDefault();
+    showContextMenu(e.clientX, e.clientY, date);
+}
+
+function handleTouchStart(e, date) {
+    longPressTimer = setTimeout(() => {
+        const touch = e.touches[0];
+        showContextMenu(touch.clientX, touch.clientY, date);
+    }, 600);
+}
+
+function handleTouchEnd() {
+    clearTimeout(longPressTimer);
+}
+
+function showContextMenu(x, y, date) {
+    activeContextDate = date;
+    const menu = document.getElementById('sessionContextMenu');
+    menu.style.left = `${x}px`;
+    menu.style.top = `${y}px`;
+    menu.classList.remove('hidden');
+
+    // Ensure menu stays within viewport
+    const menuRect = menu.getBoundingClientRect();
+    if (x + menuRect.width > window.innerWidth) menu.style.left = `${window.innerWidth - menuRect.width - 10}px`;
+    if (y + menuRect.height > window.innerHeight) menu.style.top = `${window.innerHeight - menuRect.height - 10}px`;
+
+    document.addEventListener('click', closeContextMenu);
+}
+
+function closeContextMenu() {
+    const menu = document.getElementById('sessionContextMenu');
+    menu.classList.add('hidden');
+    document.removeEventListener('click', closeContextMenu);
+}
+
+async function deleteCurrentSession() {
+    if (!activeContextDate) return;
+    if (confirm(`Are you sure you want to delete the session for ${activeContextDate}?`)) {
+        attendanceRecords = attendanceRecords.filter(r => r.date !== activeContextDate);
+
+        if (document.getElementById('attendanceDate').value === activeContextDate) {
+            renderAttendanceGrid(null);
+        }
+
+        await syncAttendanceToGitHub(`Deleted session for ${activeContextDate}`);
+    }
+}
+
+async function clearCurrentSessionData() {
+    if (!activeContextDate) return;
+    if (confirm(`Clear all attendance data for ${activeContextDate}?`)) {
+        const record = attendanceRecords.find(r => r.date === activeContextDate);
+        if (record) {
+            record.present = [];
+            if (document.getElementById('attendanceDate').value === activeContextDate) {
+                renderAttendanceGrid(record);
+            }
+            await syncAttendanceToGitHub(`Cleared attendance data for ${activeContextDate}`);
+        }
+    }
 }
 
 function initTheme() {
@@ -738,3 +873,119 @@ function initTheme() {
 
 // Run immediately (before DOM loads) to avoid flash
 initTheme();
+
+/* ═══════════════════════════════════════════════════════════════════
+   📚 COURSE CURRICULUM — Accordion & File Upload
+   ═══════════════════════════════════════════════════════════════════ */
+
+function toggleUnit(unitNum) {
+    const block = document.querySelector(`.unit-block[data-unit="${unitNum}"]`);
+    if (!block) return;
+
+    const wasOpen = block.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.unit-block').forEach(b => b.classList.remove('open'));
+
+    // Toggle clicked
+    if (!wasOpen) {
+        block.classList.add('open');
+    }
+}
+
+// File upload storage
+const uploadedFiles = {};
+
+function handleFileUpload(input, lessonId) {
+    const files = input.files;
+    if (!files.length) return;
+
+    if (!uploadedFiles[lessonId]) uploadedFiles[lessonId] = [];
+
+    const container = document.getElementById(`files-${lessonId}`);
+
+    for (const file of files) {
+        const fileObj = {
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            url: URL.createObjectURL(file)
+        };
+        uploadedFiles[lessonId].push(fileObj);
+
+        const item = createFileItem(fileObj, lessonId, uploadedFiles[lessonId].length - 1);
+        container.appendChild(item);
+    }
+
+    updateFileCount(lessonId);
+    input.value = ''; // Reset for re-upload
+}
+
+function createFileItem(fileObj, lessonId, index) {
+    const div = document.createElement('div');
+    div.className = 'file-item';
+    div.id = `file-${lessonId}-${index}`;
+
+    const typeInfo = getFileTypeInfo(fileObj.type, fileObj.name);
+    const sizeStr = formatFileSize(fileObj.size);
+
+    div.innerHTML = `
+        <div class="file-item-icon ${typeInfo.cls}">${typeInfo.icon}</div>
+        <div class="file-item-info">
+            <div class="file-item-name" title="${fileObj.name}">${fileObj.name}</div>
+            <div class="file-item-size">${sizeStr}</div>
+        </div>
+        <div class="file-item-actions">
+            <a href="${fileObj.url}" download="${fileObj.name}" title="Download">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="var(--primary-500)"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+            </a>
+            <button onclick="removeFile('${lessonId}', ${index})" title="Remove">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#ef4444"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+    `;
+
+    return div;
+}
+
+function removeFile(lessonId, index) {
+    const el = document.getElementById(`file-${lessonId}-${index}`);
+    if (el) {
+        el.style.transform = 'scale(0.8)';
+        el.style.opacity = '0';
+        setTimeout(() => {
+            el.remove();
+            if (uploadedFiles[lessonId] && uploadedFiles[lessonId][index]) {
+                URL.revokeObjectURL(uploadedFiles[lessonId][index].url);
+                uploadedFiles[lessonId][index] = null;
+            }
+            updateFileCount(lessonId);
+        }, 200);
+    }
+}
+
+function updateFileCount(lessonId) {
+    const el = document.getElementById(`fileCount-${lessonId}`);
+    if (!el) return;
+
+    const files = uploadedFiles[lessonId] ? uploadedFiles[lessonId].filter(f => f !== null) : [];
+    el.textContent = files.length ? `${files.length} file${files.length > 1 ? 's' : ''}` : 'No files yet';
+    el.style.color = files.length ? 'var(--primary-500)' : '';
+}
+
+function getFileTypeInfo(mimeType, name) {
+    const ext = name.split('.').pop().toLowerCase();
+
+    if (mimeType.startsWith('image/')) return { icon: '🖼️', cls: 'img' };
+    if (mimeType.startsWith('video/')) return { icon: '🎬', cls: 'video' };
+    if (mimeType.startsWith('audio/')) return { icon: '🎵', cls: 'audio' };
+    if (mimeType === 'application/pdf' || ext === 'pdf') return { icon: '📄', cls: 'pdf' };
+    if (['doc', 'docx', 'pptx', 'ppt', 'xlsx', 'xls'].includes(ext)) return { icon: '📑', cls: 'doc' };
+    return { icon: '📎', cls: 'other' };
+}
+
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+}
