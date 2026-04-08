@@ -3621,3 +3621,135 @@ html[data-theme="dark"] .file-item:hover {
     flex: 1 1 100%;
   }
 }
+
+/* ── Lesson Quick Actions (Beast Level) ────────────────────────── */
+.lesson-actions-beast {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.action-btn-p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.action-btn-p.watch {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: #fff !important;
+}
+
+.action-btn-p.download {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff !important;
+}
+
+.action-btn-p:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+}
+
+.action-btn-p::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.action-btn-p:hover::before {
+  left: 100%;
+}
+
+@media (max-width: 640px) {
+  .lesson-actions-beast {
+    width: 100%;
+    margin-top: 12px;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .action-btn-p {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+}
+
+/* ── Utility Classes for Lint Fixes ────────────────────────── */
+.col-rank {
+  width: 48px;
+}
+
+.waveform-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.video-available {
+  color: var(--primary-500) !important;
+}
+
+.icon-sm {
+  width: 16px;
+  height: 16px;
+}
+
+.icon-med {
+  width: 20px;
+  height: 20px;
+}
+
+.sync-msg {
+  padding: 20px;
+  text-align: center;
+  color: var(--gray-500);
+}
+
+.error-msg {
+  padding: 20px;
+  text-align: center;
+  color: var(--danger);
+}
+
+.no-data-msg {
+  text-align: center;
+  padding: 20px;
+  color: var(--gray-500);
+}
+
+.results-empty-msg {
+  padding: 20px;
+  text-align: center;
+  color: var(--gray-500);
+  grid-column: 1/-1;
+}
+
+.lesson-icon-quiz {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.quiz-card {
+  border-left: 4px solid #f59e0b !important;
+}
