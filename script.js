@@ -496,9 +496,25 @@ function switchTab(tab, linkEl, e) {
 /* ═══════════════════════════════════════════════════════════════
    GITHUB API & ATTENDANCE LOGIC
    ═══════════════════════════════════════════════════════════════ */
-const REPO = 'Gwargioss/speak-english';
 const FILE_PATH = 'data/attendance.json';
 const CURRICULUM_PATH = 'data/curriculum.json';
+
+// Dynamic Repository Detection
+let REPO = 'Gwargioss/speak-english'; // Default
+try {
+    if (window.location.hostname.includes('github.io')) {
+        const owner = window.location.hostname.split('.')[0];
+        const pathParts = window.location.pathname.split('/').filter(p => p);
+        if (pathParts.length > 0) {
+            REPO = `${owner}/${pathParts[0]}`;
+        }
+    }
+} catch (e) {
+    console.warn("Auto-repo detection failed, using fallback.");
+}
+
+console.log(`[Persistence] Target Repository: ${REPO}`);
+
 let ghToken = localStorage.getItem('eduTrack_ghToken') || '';
 let attendanceRecords = [];
 let curriculumData = {};
@@ -589,11 +605,12 @@ async function fetchAttendanceData() {
             attendanceRecords = [];
             fileSha = '';
         } else {
-            throw new Error('Failed to fetch API');
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.message || `HTTP ${res.status}`);
         }
     } catch (e) {
         console.error(e);
-        list.innerHTML = `<div class="error-msg">Error fetching data. Check token permissions.</div>`;
+        list.innerHTML = `<div class="error-msg">Error: ${e.message}. Check token permissions.</div>`;
         return;
     }
 
@@ -711,21 +728,35 @@ async function syncAttendanceToGitHub(commitMessage = 'Update attendance data') 
             body: JSON.stringify(body)
         });
 
-        if (!res.ok) throw new Error('Push failed');
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            let errMsg = errData.message || `Status ${res.status}`;
+            if (res.status === 403) errMsg = "Permission Denied. Check if your token has 'repo' scope.";
+            if (res.status === 401) errMsg = "Invalid Token. Please logout and login again.";
+            throw new Error(errMsg);
+        }
 
         const data = await res.json();
         fileSha = data.content.sha;
 
         const msg = document.getElementById('attendanceMessage');
         if (msg) {
-            msg.classList.remove('hidden');
-            setTimeout(() => msg.classList.add('hidden'), 3000);
+            msg.textContent = "✓ Saved Successfully!";
+            msg.classList.remove('hidden', 'error-text');
+            setTimeout(() => msg.classList.add('hidden'), 4000);
         }
 
         renderAttendanceHistory();
     } catch (e) {
         console.error(e);
-        alert("Failed to sync with GitHub. Please check your token and connection.");
+        const msg = document.getElementById('attendanceMessage');
+        if (msg) {
+            msg.textContent = `Error: ${e.message}`;
+            msg.classList.remove('hidden');
+            msg.style.color = 'var(--danger)'; // Quick inline override for error visibility
+        } else {
+            alert(`Failed to sync: ${e.message}`);
+        }
     } finally {
         btn.disabled = false;
         btn.innerHTML = originalText;
@@ -1142,12 +1173,16 @@ async function syncCurriculumToGitHub(commitMessage = 'Update curriculum data') 
             body: JSON.stringify(body)
         });
 
-        if (res.ok) {
-            const data = await res.json();
-            curriculumSha = data.content.sha;
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.message || `Status ${res.status}`);
         }
+
+        const data = await res.json();
+        curriculumSha = data.content.sha;
     } catch (e) {
         console.error("Curriculum sync failed:", e);
+        alert(`Curriculum Sync Error: ${e.message}`);
     }
 }
 
