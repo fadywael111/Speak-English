@@ -262,8 +262,12 @@
                             <h3 class="audio-title">Lord's Prayer</h3>
                             <p class="audio-subtitle">Audio Lesson</p>
                             <div class="audio-player" id="player1">
-                                <div class="progress-container" onclick="seekAudio(event, 0)">
-                                    <div class="progress-bar" id="progress1"></div>
+                                <div class="progress-container" onmousedown="startSeek(event, 0)"
+                                    ontouchstart="startSeek(event, 0)">
+                                    <div class="progress-bg">
+                                        <div class="progress-bar" id="progress1"></div>
+                                    </div>
+                                    <div class="progress-thumb" id="thumb1"></div>
                                 </div>
                                 <span class="audio-time" id="time1">0:00 / 0:00</span>
                             </div>
@@ -320,8 +324,12 @@
                             <h3 class="audio-title">The Trinitarian Formula</h3>
                             <p class="audio-subtitle">Audio Lesson</p>
                             <div class="audio-player" id="player2">
-                                <div class="progress-container" onclick="seekAudio(event, 1)">
-                                    <div class="progress-bar" id="progress2"></div>
+                                <div class="progress-container" onmousedown="startSeek(event, 1)"
+                                    ontouchstart="startSeek(event, 1)">
+                                    <div class="progress-bg">
+                                        <div class="progress-bar" id="progress2"></div>
+                                    </div>
+                                    <div class="progress-thumb" id="thumb2"></div>
                                 </div>
                                 <span class="audio-time" id="time2">0:00 / 0:00</span>
                             </div>

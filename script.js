@@ -195,6 +195,7 @@ function init() {
         document.getElementById('th-score').classList.add('desc');
         applySort();
         render();
+        initSeek(); // Initialize audio seeking dragging
     }, 600);
 }
 
@@ -207,6 +208,9 @@ const audioFiles = [
     { src: "Lord's Prayer.mp3", el: null },
     { src: "The Trinitarian Formula.mp3", el: null }
 ];
+
+let isDragging = false;
+let dragIdx = -1;
 
 audioFiles.forEach((af, i) => {
     af.el = new Audio(af.src);
@@ -287,7 +291,11 @@ const lyricsData = [
 function updateProgress(idx) {
     const audio = audioFiles[idx].el;
     const pct = (audio.currentTime / audio.duration) * 100;
+
     document.getElementById('progress' + (idx + 1)).style.width = pct + '%';
+    const thumb = document.getElementById('thumb' + (idx + 1));
+    if (thumb) thumb.style.left = pct + '%';
+
     document.getElementById('time' + (idx + 1)).textContent =
         `${fmtTime(audio.currentTime)} / ${fmtTime(audio.duration)}`;
 
@@ -336,12 +344,55 @@ function updateProgress(idx) {
     }
 }
 
-function seekAudio(e, idx) {
-    const bar = e.currentTarget;
-    const rect = bar.getBoundingClientRect();
-    const pct = (e.clientX - rect.left) / rect.width;
-    audioFiles[idx].el.currentTime = pct * audioFiles[idx].el.duration;
-    updateProgress(idx); // immediately update lyrics/progress
+function initSeek() {
+    window.addEventListener('mousemove', (e) => {
+        if (isDragging) handleSeek(e);
+    });
+    window.addEventListener('mouseup', () => {
+        if (isDragging) {
+            document.querySelectorAll('.progress-container').forEach(c => c.classList.remove('dragging'));
+            isDragging = false;
+            dragIdx = -1;
+        }
+    });
+    // Touch support
+    window.addEventListener('touchmove', (e) => {
+        if (isDragging) {
+            handleSeek(e.touches[0]);
+            e.preventDefault();
+        }
+    }, { passive: false });
+    window.addEventListener('touchend', () => {
+        if (isDragging) {
+            document.querySelectorAll('.progress-container').forEach(c => c.classList.remove('dragging'));
+            isDragging = false;
+            dragIdx = -1;
+        }
+    });
+}
+
+function startSeek(e, idx) {
+    isDragging = true;
+    dragIdx = idx;
+    const container = document.querySelectorAll('.progress-container')[idx];
+    if (container) container.classList.add('dragging');
+    handleSeek(e.touches ? e.touches[0] : e);
+}
+
+function handleSeek(e) {
+    if (dragIdx === -1) return;
+    const containers = document.querySelectorAll('.progress-container');
+    const container = containers[dragIdx];
+    if (!container) return;
+
+    const rect = container.getBoundingClientRect();
+    let pct = (e.clientX - rect.left) / rect.width;
+    pct = Math.max(0, Math.min(1, pct));
+    const audio = audioFiles[dragIdx].el;
+    if (audio.duration) {
+        audio.currentTime = pct * audio.duration;
+        updateProgress(dragIdx);
+    }
 }
 
 function resetPlayer(idx) {
