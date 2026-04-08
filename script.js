@@ -190,6 +190,7 @@ function init() {
     setTimeout(() => {
         updateStats();
         initClassFilter();
+        fetchCurriculumData(); // Load custom video links
         // Default sort: score desc
         document.getElementById('th-score').classList.add('desc');
         applySort();
@@ -446,9 +447,12 @@ function switchTab(tab, linkEl, e) {
    ═══════════════════════════════════════════════════════════════ */
 const REPO = 'Gwargioss/speak-english';
 const FILE_PATH = 'data/attendance.json';
+const CURRICULUM_PATH = 'data/curriculum.json';
 let ghToken = localStorage.getItem('eduTrack_ghToken') || '';
 let attendanceRecords = [];
+let curriculumData = {};
 let fileSha = '';
+let curriculumSha = '';
 
 async function loginToGitHub() {
     const input = document.getElementById('ghTokenInput').value.trim();
@@ -510,7 +514,7 @@ async function initAttendanceUI() {
 
 async function fetchAttendanceData() {
     const list = document.getElementById('attendanceHistory');
-    list.innerHTML = `<div style="padding:20px; text-align:center; color:var(--gray-500);">Syncing from GitHub...</div>`;
+    list.innerHTML = `<div class="sync-msg">Syncing from GitHub...</div>`;
 
     try {
         const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}?t=${Date.now()}`, {
@@ -538,7 +542,7 @@ async function fetchAttendanceData() {
         }
     } catch (e) {
         console.error(e);
-        list.innerHTML = `<div style="padding:20px; text-align:center; color:var(--danger);">Error fetching data. Check token permissions.</div>`;
+        list.innerHTML = `<div class="error-msg">Error fetching data. Check token permissions.</div>`;
         return;
     }
 
@@ -632,7 +636,7 @@ async function syncAttendanceToGitHub(commitMessage = 'Update attendance data') 
     const btn = document.getElementById('saveAttBtn');
     const originalText = btn.innerHTML;
     btn.disabled = true;
-    btn.innerHTML = `<svg class="animate-spin" viewBox="0 0 24 24" fill="none" width="20" height="20" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Syncing...`;
+    btn.innerHTML = `<svg class="animate-spin icon-med" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Syncing...`;
 
     try {
         const contentStr = btoa(encodeURIComponent(JSON.stringify(attendanceRecords, null, 2)).replace(/%([0-9A-F]{2})/g, (match, p1) => {
@@ -683,7 +687,7 @@ let longPressTimer = null;
 function renderAttendanceHistory() {
     const list = document.getElementById('attendanceHistory');
     if (!attendanceRecords.length) {
-        list.innerHTML = `<div class="no-data" style="text-align:center;padding:20px;color:var(--gray-500);">No session records yet</div>`;
+        list.innerHTML = `<div class="no-data-msg">No session records yet</div>`;
         return;
     }
 
@@ -711,7 +715,7 @@ function renderAttendanceHistory() {
 function showAllResults() {
     const grid = document.getElementById('resultsModalGrid');
     if (!attendanceRecords || !attendanceRecords.length) {
-        grid.innerHTML = '<div style="padding:20px; text-align:center; color:var(--gray-500); grid-column: 1/-1;">No sessions recorded yet.</div>';
+        grid.innerHTML = '<div class="results-empty-msg">No sessions recorded yet.</div>';
     } else {
         const totalSessions = attendanceRecords.length;
         let html = '';
@@ -988,4 +992,172 @@ function formatFileSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
     return (bytes / 1048576).toFixed(1) + ' MB';
+}
+
+async function fetchCurriculumData() {
+    try {
+        const headers = ghToken ? { 'Authorization': `token ${ghToken}` } : {};
+        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${CURRICULUM_PATH}?t=${Date.now()}`, {
+            cache: 'no-store',
+            headers: headers
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            curriculumSha = data.sha;
+            const decoded = decodeURIComponent(Array.prototype.map.call(atob(data.content), (c) => {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            curriculumData = JSON.parse(decoded);
+            applyCurriculumData();
+        }
+    } catch (e) {
+        console.warn("Curriculum fetch failed:", e);
+    }
+}
+
+function applyCurriculumData() {
+    for (const [id, value] of Object.entries(curriculumData)) {
+        if (id.includes('-quiz')) {
+            transformQuizUI(id, value);
+        } else {
+            transformLessonUI(id, value);
+        }
+    }
+}
+
+function transformLessonUI(lessonId, id) {
+    const card = document.querySelector(`.lesson-card[data-lesson="${lessonId}"]`);
+    if (!card) return;
+
+    if (card.querySelector('.lesson-actions-beast')) return;
+
+    const watchLink = `https://drive.google.com/file/d/${id}/view`;
+    const downloadLink = `https://drive.google.com/uc?id=${id}&export=download`;
+
+    const infoSpan = card.querySelector('.lesson-file-count');
+    if (infoSpan) {
+        infoSpan.textContent = "Video Available";
+        infoSpan.classList.add('video-available');
+    }
+
+    const uploadBtn = card.querySelector('.upload-btn');
+    if (uploadBtn) uploadBtn.remove();
+
+    // Check for any legacy file inputs
+    const fileInput = card.querySelector('.file-input-hidden');
+    if (fileInput) fileInput.remove();
+
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'lesson-actions-beast';
+    actionsDiv.innerHTML = `
+        <a href="${watchLink}" target="_blank" rel="noopener noreferrer" class="action-btn-p watch">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-sm">
+                <path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clip-rule="evenodd" />
+            </svg>
+            <span>Watch</span>
+        </a>
+        <a href="${downloadLink}" target="_blank" rel="noopener noreferrer" class="action-btn-p download">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+            <span>Download</span>
+        </a>
+    `;
+    card.appendChild(actionsDiv);
+}
+
+async function syncCurriculumToGitHub(commitMessage = 'Update curriculum data') {
+    if (!ghToken) return;
+    try {
+        const contentStr = btoa(encodeURIComponent(JSON.stringify(curriculumData, null, 2)).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+            return String.fromCharCode('0x' + p1);
+        }));
+
+        const body = {
+            message: commitMessage,
+            content: contentStr,
+            branch: 'main'
+        };
+        if (curriculumSha) body.sha = curriculumSha;
+
+        const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${CURRICULUM_PATH}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${ghToken}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            curriculumSha = data.content.sha;
+        }
+    } catch (e) {
+        console.error("Curriculum sync failed:", e);
+    }
+}
+
+function promptVideoLink(lessonId) {
+    if (!ghToken) return alert("You must be logged in with a GitHub token to add video links.");
+
+    const link = prompt("Enter Google Drive Video Link:");
+    if (!link) return;
+
+    const idMatch = link.match(/\/d\/([-\w]{25,})/) || link.match(/id=([-\w]{25,})/);
+    if (!idMatch) return alert("Invalid Google Drive link format.");
+
+    const id = idMatch[1];
+    curriculumData[lessonId] = id;
+
+    // Optimistic UI update
+    transformLessonUI(lessonId, id);
+
+    // Sync to GitHub
+    syncCurriculumToGitHub(`Link video for lesson ${lessonId}`);
+}
+
+function promptQuizLink(lessonId) {
+    if (!ghToken) return alert("You must be logged in with a GitHub token to add quiz links.");
+
+    const link = prompt("Enter Quiz Link (Google Form, etc.):");
+    if (!link) return;
+
+    curriculumData[lessonId] = link;
+
+    // Optimistic UI update
+    transformQuizUI(lessonId, link);
+
+    // Sync to GitHub
+    syncCurriculumToGitHub(`Link quiz for ${lessonId}`);
+}
+
+function transformQuizUI(lessonId, url) {
+    const card = document.querySelector(`.lesson-card[data-lesson="${lessonId}"]`);
+    if (!card) return;
+
+    const infoSpan = card.querySelector('.lesson-file-count');
+    if (infoSpan) {
+        infoSpan.textContent = "Quiz Ready";
+        infoSpan.classList.add('video-available');
+    }
+
+    const uploadBtn = card.querySelector('.upload-btn');
+    if (uploadBtn) uploadBtn.remove();
+
+    if (card.querySelector('.lesson-actions-beast')) return;
+
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'lesson-actions-beast';
+    actionsDiv.innerHTML = `
+        <a href="${url}" target="_blank" rel="noopener noreferrer" class="action-btn-p download">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+            </svg>
+            <span>Open Quiz</span>
+        </a>
+    `;
+    card.appendChild(actionsDiv);
 }
