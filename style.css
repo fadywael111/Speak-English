@@ -2857,18 +2857,19 @@ html[data-theme="dark"] .live-summary {
   .attendance-controls {
     width: 100%;
     gap: 8px;
-    flex-direction: column
+    flex-wrap: wrap
   }
 
   .date-input {
-    width: 100%;
-    flex: 1
+    flex: 1;
+    min-width: 120px
   }
 
   .results-btn,
   .lock-btn,
   .add-session-btn {
-    flex: 1
+    flex: none;
+    min-width: 44px
   }
 }
 
