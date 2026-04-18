@@ -30,7 +30,7 @@
             </div>
         </div>
         <nav class="sidebar-nav">
-            <a href="#" class="active" onclick="switchTab('students', this, event)">
+            <a href="#" class="active" onclick="switchTab('students', this, event)" data-tab="students">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -38,7 +38,7 @@
                 </svg>
                 Students
             </a>
-            <a href="#" onclick="switchTab('content', this, event)">
+            <a href="#" onclick="switchTab('content', this, event)" data-tab="content">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -46,7 +46,7 @@
                 </svg>
                 Content
             </a>
-            <a href="#" onclick="switchTab('attendance', this, event)" id="nav-attendance">
+            <a href="#" onclick="switchTab('attendance', this, event)" id="nav-attendance" data-tab="attendance">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -83,8 +83,15 @@
                         d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
             </button>
-            <span class="navbar-title" id="navTitle">Students</span>
+            <div class="breadcrumbs" id="navBreadcrumbs">
+                <span class="bc-home">Home</span>
+                <span class="bc-sep">/</span>
+                <span class="bc-level-text" id="bcLevelText">Level 3</span>
+                <span class="bc-sep">/</span>
+                <span class="bc-current" id="navTitle">Students</span>
+            </div>
             <div class="navbar-right">
+
                 <button class="dark-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode"
                     title="Toggle Dark Mode">
                     <!-- Moon icon (shown in light mode) -->
@@ -100,7 +107,18 @@
                             d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
                     </svg>
                 </button>
-                <span class="navbar-badge">Level 3</span>
+                <div class="level-dropdown-container">
+                    <button class="bc-level-pill" id="currentLevelBtn" onclick="toggleLevelMenu(event)">Level 3</button>
+                    <div class="level-menu hidden" id="levelMenu">
+                        <button class="level-item" onclick="changeLevel('Level 1')">Level 1</button>
+                        <button class="level-item" onclick="changeLevel('Level 2')">Level 2</button>
+                        <button class="level-item active" onclick="changeLevel('Level 3')">Level 3</button>
+                        <button class="level-item" onclick="changeLevel('Level 4')">Level 4</button>
+                        <button class="level-item" onclick="changeLevel('Level 5')">Level 5</button>
+                        <button class="level-item" onclick="changeLevel('Level 6')">Level 6</button>
+                        <button class="level-item" onclick="changeLevel('Level 7')">Level 7</button>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -166,6 +184,19 @@
                     <option value="all">All Classes</option>
                 </select>
                 <span class="count-badge" id="countBadge">—</span>
+                <button class="add-student-btn admin-only hidden" onclick="openAddStudentModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    Add Student
+                </button>
+            </div>
+            
+            <!-- Smart Filters -->
+            <div class="smart-filters">
+                <button class="filter-pill active" onclick="setSmartFilter('all', event)">All</button>
+                <button class="filter-pill" onclick="setSmartFilter('high', event)">Top Students</button>
+                <button class="filter-pill" onclick="setSmartFilter('low', event)">Needs Attention</button>
             </div>
 
             <!-- ── Table (desktop/tablet) ───────────────────────────── -->
@@ -182,6 +213,7 @@
                                     class="sort-arrow"></span></th>
                             <th scope="col">Parent / Guardian</th>
                             <th scope="col">Contact</th>
+                            <th scope="col" class="admin-only hidden">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="tBody"></tbody>
@@ -236,7 +268,15 @@
                     <h2>Audio Content</h2>
                     <p>Listen to or download the available audio materials</p>
                 </div>
-                <div class="audio-grid">
+                
+                <!-- Content Empty State -->
+                <div class="empty-state hidden" id="emptyStateContent">
+                    <div class="empty-icon">🎧</div>
+                    <h3>No Content Yet</h3>
+                    <p>Content for this level will be added soon.</p>
+                </div>
+
+                <div class="audio-grid" id="audioGrid">
 
                     <!-- Audio Card 1 -->
                     <div class="audio-card" id="audioCard1">
@@ -981,18 +1021,47 @@
 
 
             <!-- ── Global Footer ────────────────────────────────────────── -->
-            <footer class="main-footer">
-                <div class="instructor-card-premium">
-                    <div class="instructor-mini-premium">
-                        <div class="avatar-premium">G</div>
-                        <div class="info-premium">
-                            <p>Gwargios Mouris</p>
-                            <span>Instructor</span>
-                        </div>
-                    </div>
-                </div>
             </footer>
         </main>
+    </div>
+
+    <!-- Student Management Modal -->
+    <div id="studentModal" class="modal hidden">
+        <div class="modal-content glass">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Student</h2>
+                <button class="close-btn" onclick="closeStudentModal()">&times;</button>
+            </div>
+            <form id="studentForm" onsubmit="handleStudentSubmit(event)">
+                <input type="hidden" id="editStudentIndex">
+                <div class="form-group">
+                    <label>Student Name</label>
+                    <input type="text" id="stdName" required placeholder="Ex: Ahmed Mohamed">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Score</label>
+                        <input type="number" id="stdScore" required min="0" max="100" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Class</label>
+                        <input type="number" id="stdClass" required min="1" value="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Guardian Name</label>
+                    <input type="text" id="stdGuardian" placeholder="Father or Mother name">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp Phone (with 20)</label>
+                    <input type="text" id="stdPhone" placeholder="Ex: 201234567890">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeStudentModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" id="stdSubmitBtn">Save Student</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════
