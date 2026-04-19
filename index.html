@@ -896,11 +896,13 @@
                                 d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
                         </svg>
                         <h3>Admin Access Required</h3>
-                        <p>Please enter your GitHub Personal Access Token to manage attendance.</p>
-                        <input type="password" id="ghTokenInput" class="auth-input" placeholder="ghp_xxxxxxxxxxxx"
-                            autocomplete="off">
+                        <p>Enter credentials to manage <strong id="authLevelName">this level</strong>.</p>
+                        <input type="password" id="ghTokenInput" class="auth-input"
+                            placeholder="GitHub Token (ghp_xxxxxxxxxxxx)" autocomplete="off">
+                        <input type="password" id="levelPassInput" class="auth-input" placeholder="Level Password"
+                            autocomplete="off" style="margin-top: 0.75rem;">
                         <button class="auth-btn" id="authBtn" onclick="loginToGitHub()">Authenticate</button>
-                        <div id="authError" class="auth-error hidden">Invalid token. Please try again.</div>
+                        <div id="authError" class="auth-error hidden">Invalid credentials.</div>
                     </div>
                 </div>
 

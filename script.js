@@ -85,6 +85,10 @@ function changeLevel(level) {
     const btn = document.getElementById('currentLevelBtn');
     if (btn) btn.classList.remove('active-glow');
 
+    // Always switch to Students tab when changing levels
+    const studentsTab = document.querySelector('.sidebar-nav a[data-tab="students"]');
+    if (studentsTab) switchTab('students', studentsTab);
+
     // UI Elements
     checkAdminVisibility();
     updateTeachers();
@@ -111,7 +115,7 @@ function changeLevel(level) {
         }
 
         // Restore Upload button if it doesn't exist AND user is admin
-        if (!card.querySelector('.upload-btn') && ghToken) {
+        if (!card.querySelector('.upload-btn') && isLevelAdmin()) {
             const btn = document.createElement('button');
             btn.className = 'upload-btn';
             btn.setAttribute('onclick', `promptVideoLink('${lessonId}')`);
@@ -213,7 +217,7 @@ function renderTable(data) {
             <td><span class="class-badge">${s.cls}</span></td>
             <td class="sub-text">${s.guardian || '<span class="no-data">—</span>'}</td>
             <td>${waButton(s.phone)}</td>
-            <td class="admin-only ${ghToken ? '' : 'hidden'}">
+            <td class="admin-only ${isLevelAdmin() ? '' : 'hidden'}">
                 <div class="td-actions">
                     <button class="action-icon-btn edit" onclick="openEditStudentModal(${i})" title="Edit Student">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
@@ -256,7 +260,7 @@ function renderCards(data) {
             </div>
             <div class="card-actions-wrapper">
                 ${waButton(s.phone)}
-                <div class="admin-actions admin-only ${ghToken ? '' : 'hidden'}">
+                <div class="admin-actions admin-only ${isLevelAdmin() ? '' : 'hidden'}">
                     <button class="action-icon-btn edit" onclick="openEditStudentModal(${i})" title="Edit">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
                     </button>
@@ -707,37 +711,79 @@ let attendanceRecords = []; // Currently assigned attendance mapped to currentLe
 let fullAttendanceData = {}; // Full JSON object from github
 let fullCurriculumData = {}; // Full JSON object from github for curriculum
 let curriculumData = {}; // Currently unused, or same logic applies
+
+/* ── Per-Level Admin Passwords ───────────────────────────────── */
+const levelPasswords = {
+    'Level 1': 'L1_admin_2026',
+    'Level 2': 'L2_admin_2026',
+    'Level 3': 'L3_admin_2026',
+    'Level 4': 'L4_admin_2026',
+    'Level 5': 'L5_admin_2026',
+    'Level 6': 'L6_admin_2026',
+    'Level 7': 'L7_admin_2026',
+};
+let adminLevels = JSON.parse(localStorage.getItem('eduTrack_adminLevels') || '{}');
+
+function isLevelAdmin() {
+    return !!ghToken && adminLevels[currentLevel] === true;
+}
 let fileSha = '';
 let curriculumSha = '';
 
 async function loginToGitHub() {
-    const input = document.getElementById('ghTokenInput').value.trim();
+    const tokenInput = document.getElementById('ghTokenInput').value.trim();
+    const levelPassInput = document.getElementById('levelPassInput').value.trim();
     const btn = document.getElementById('authBtn');
     const err = document.getElementById('authError');
 
-    if (!input) return;
+    if (!tokenInput && !ghToken) {
+        err.textContent = 'Please enter a GitHub token.';
+        err.classList.remove('hidden');
+        return;
+    }
+    if (!levelPassInput) {
+        err.textContent = 'Please enter the level password.';
+        err.classList.remove('hidden');
+        return;
+    }
+
+    // Validate level password first (instant check)
+    if (levelPassInput !== levelPasswords[currentLevel]) {
+        err.textContent = 'Invalid level password for ' + currentLevel + '.';
+        err.classList.remove('hidden');
+        return;
+    }
+
     btn.disabled = true;
     btn.textContent = 'Authenticating...';
     err.classList.add('hidden');
 
-    try {
-        const res = await fetch('https://api.github.com/user', {
-            headers: { 'Authorization': `token ${input}` }
-        });
+    const tokenToUse = tokenInput || ghToken;
 
-        if (res.ok) {
-            ghToken = input;
-            localStorage.setItem('eduTrack_ghToken', ghToken);
-            document.getElementById('attendanceAuth').classList.add('hidden');
-            document.getElementById('attendanceDashboard').classList.remove('hidden');
-            checkAdminVisibility();
-            initAttendanceUI();
-            // Refresh current view
-            changeLevel(currentLevel);
-        } else {
-            throw new Error('Invalid token');
+    try {
+        // Validate GitHub token (skip API call if same token already stored)
+        if (!ghToken || ghToken !== tokenToUse) {
+            const res = await fetch('https://api.github.com/user', {
+                headers: { 'Authorization': `token ${tokenToUse}` }
+            });
+            if (!res.ok) throw new Error('Invalid token');
         }
+
+        ghToken = tokenToUse;
+        localStorage.setItem('eduTrack_ghToken', ghToken);
+
+        // Grant admin access for current level
+        adminLevels[currentLevel] = true;
+        localStorage.setItem('eduTrack_adminLevels', JSON.stringify(adminLevels));
+
+        document.getElementById('attendanceAuth').classList.add('hidden');
+        document.getElementById('attendanceDashboard').classList.remove('hidden');
+        checkAdminVisibility();
+        initAttendanceUI();
+        // Refresh current view
+        changeLevel(currentLevel);
     } catch (e) {
+        err.textContent = 'Invalid GitHub token. Please try again.';
         err.classList.remove('hidden');
     } finally {
         btn.disabled = false;
@@ -747,8 +793,12 @@ async function loginToGitHub() {
 
 function logoutGitHub() {
     ghToken = '';
+    adminLevels = {};
     localStorage.removeItem('eduTrack_ghToken');
+    localStorage.removeItem('eduTrack_adminLevels');
     document.getElementById('ghTokenInput').value = '';
+    const levelPassField = document.getElementById('levelPassInput');
+    if (levelPassField) levelPassField.value = '';
     document.getElementById('attendanceAuth').classList.remove('hidden');
     document.getElementById('attendanceDashboard').classList.add('hidden');
     checkAdminVisibility();
@@ -756,9 +806,18 @@ function logoutGitHub() {
 }
 
 async function initAttendanceUI() {
-    if (!ghToken) {
+    if (!isLevelAdmin()) {
         document.getElementById('attendanceAuth').classList.remove('hidden');
         document.getElementById('attendanceDashboard').classList.add('hidden');
+        // Pre-fill GitHub token if already stored
+        const tokenField = document.getElementById('ghTokenInput');
+        if (ghToken && tokenField) tokenField.value = ghToken;
+        // Clear level password for new level
+        const passField = document.getElementById('levelPassInput');
+        if (passField) passField.value = '';
+        // Update level name in auth card
+        const authLevelName = document.getElementById('authLevelName');
+        if (authLevelName) authLevelName.textContent = currentLevel;
         return;
     } else {
         document.getElementById('attendanceAuth').classList.add('hidden');
@@ -1413,7 +1472,7 @@ async function syncCurriculumToGitHub(commitMessage = 'Update curriculum data') 
 }
 
 function promptVideoLink(lessonId) {
-    if (!ghToken) return alert("You must be logged in with a GitHub token to add video links.");
+    if (!isLevelAdmin()) return alert("You must be an admin for this level to add video links.");
 
     const link = prompt("Enter Google Drive Video Link:");
     if (!link) return;
@@ -1432,7 +1491,7 @@ function promptVideoLink(lessonId) {
 }
 
 function promptQuizLink(lessonId) {
-    if (!ghToken) return alert("You must be logged in with a GitHub token to add quiz links.");
+    if (!isLevelAdmin()) return alert("You must be an admin for this level to add quiz links.");
 
     const link = prompt("Enter Quiz Link (Google Form, etc.):");
     if (!link) return;
@@ -1685,7 +1744,7 @@ async function syncLevelsToGitHub(msg = 'Update students data') {
 
 /* ── Student Management Logic ────────────────────────────────── */
 function checkAdminVisibility() {
-    const isAdmin = !!ghToken;
+    const isAdmin = isLevelAdmin();
     document.querySelectorAll('.admin-only').forEach(el => {
         if (isAdmin) el.classList.remove('hidden');
         else el.classList.add('hidden');
