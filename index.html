@@ -24,9 +24,9 @@
             <div class="logo">E</div>
             <div class="brand-info">
                 <span class="m-title">Teachers</span>
-                <span class="m-subtitle">Mr: Fady Wael</span>
-                <span class="m-subtitle">Ms: Evan Nabil</span>
-                <span class="m-subtitle">Ms: Nesma Saad</span>
+                <span class="m-subtitle" id="teacher1">Mr: Fady Wael</span>
+                <span class="m-subtitle" id="teacher2">Ms: Evan Nabil</span>
+                <span class="m-subtitle" id="teacher3">Ms: Nesma Saad</span>
             </div>
         </div>
         <nav class="sidebar-nav">
@@ -84,10 +84,6 @@
                 </svg>
             </button>
             <div class="breadcrumbs" id="navBreadcrumbs">
-                <span class="bc-home">Home</span>
-                <span class="bc-sep">/</span>
-                <span class="bc-level-text" id="bcLevelText">Level 3</span>
-                <span class="bc-sep">/</span>
                 <span class="bc-current" id="navTitle">Students</span>
             </div>
             <div class="navbar-right">
@@ -108,7 +104,13 @@
                     </svg>
                 </button>
                 <div class="level-dropdown-container">
-                    <button class="bc-level-pill" id="currentLevelBtn" onclick="toggleLevelMenu(event)">Level 3</button>
+                    <button class="bc-level-pill" id="currentLevelBtn" onclick="toggleLevelMenu(event)">
+                        <span id="currentLevelText">Level 3</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                            stroke="currentColor" class="arrow-icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </button>
                     <div class="level-menu hidden" id="levelMenu">
                         <button class="level-item" onclick="changeLevel('Level 1')">Level 1</button>
                         <button class="level-item" onclick="changeLevel('Level 2')">Level 2</button>
@@ -185,17 +187,19 @@
                 </select>
                 <span class="count-badge" id="countBadge">—</span>
                 <button class="add-student-btn admin-only hidden" onclick="openAddStudentModal()">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
                     Add Student
                 </button>
             </div>
-            
+
             <!-- Smart Filters -->
             <div class="smart-filters">
                 <button class="filter-pill active" onclick="setSmartFilter('all', event)">All</button>
                 <button class="filter-pill" onclick="setSmartFilter('high', event)">Top Students</button>
+                <button class="filter-pill" onclick="setSmartFilter('mid', event)">Solid Progress</button>
                 <button class="filter-pill" onclick="setSmartFilter('low', event)">Needs Attention</button>
             </div>
 
@@ -268,7 +272,7 @@
                     <h2>Audio Content</h2>
                     <p>Listen to or download the available audio materials</p>
                 </div>
-                
+
                 <!-- Content Empty State -->
                 <div class="empty-state hidden" id="emptyStateContent">
                     <div class="empty-icon">🎧</div>
@@ -580,7 +584,7 @@
                                         <h4>Lesson 1</h4><span class="lesson-file-count" id="fileCount-2-1">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('2-1')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('2-1')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -595,7 +599,7 @@
                                         <h4>Lesson 2</h4><span class="lesson-file-count" id="fileCount-2-2">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('2-2')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('2-2')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -610,7 +614,7 @@
                                         <h4>Lesson 3</h4><span class="lesson-file-count" id="fileCount-2-3">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('2-3')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('2-3')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -625,7 +629,7 @@
                                         <h4>Revision</h4><span class="lesson-file-count" id="fileCount-2-rev">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('2-rev')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('2-rev')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -660,7 +664,7 @@
                                         <h4>Lesson 1</h4><span class="lesson-file-count" id="fileCount-3-1">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('3-1')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('3-1')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -675,7 +679,7 @@
                                         <h4>Lesson 2</h4><span class="lesson-file-count" id="fileCount-3-2">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('3-2')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('3-2')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -690,7 +694,7 @@
                                         <h4>Lesson 3</h4><span class="lesson-file-count" id="fileCount-3-3">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('3-3')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('3-3')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -705,7 +709,7 @@
                                         <h4>Revision</h4><span class="lesson-file-count" id="fileCount-3-rev">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('3-rev')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('3-rev')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -740,7 +744,7 @@
                                         <h4>Lesson 1</h4><span class="lesson-file-count" id="fileCount-4-1">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('4-1')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('4-1')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -755,7 +759,7 @@
                                         <h4>Lesson 2</h4><span class="lesson-file-count" id="fileCount-4-2">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('4-2')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('4-2')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -770,7 +774,7 @@
                                         <h4>Lesson 3</h4><span class="lesson-file-count" id="fileCount-4-3">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('4-3')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('4-3')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -785,7 +789,7 @@
                                         <h4>Revision</h4><span class="lesson-file-count" id="fileCount-4-rev">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('4-rev')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('4-rev')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -820,7 +824,7 @@
                                         <h4>Lesson 1</h4><span class="lesson-file-count" id="fileCount-5-1">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('5-1')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('5-1')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -835,7 +839,7 @@
                                         <h4>Lesson 2</h4><span class="lesson-file-count" id="fileCount-5-2">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('5-2')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('5-2')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -850,7 +854,7 @@
                                         <h4>Lesson 3</h4><span class="lesson-file-count" id="fileCount-5-3">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('5-3')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('5-3')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -865,7 +869,7 @@
                                         <h4>Revision</h4><span class="lesson-file-count" id="fileCount-5-rev">No files
                                             yet</span>
                                     </div>
-                                    <button class="upload-btn" onclick="promptVideoLink('5-rev')">
+                                    <button class="upload-btn admin-only hidden" onclick="promptVideoLink('5-rev')">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -1020,7 +1024,14 @@
             </section>
 
 
-            <!-- ── Global Footer ────────────────────────────────────────── -->
+            <footer class="main-footer">
+                <div class="instructor-card">
+                    <div class="instructor-avatar">G</div>
+                    <div class="instructor-info">
+                        <h3>Gwargios Mouris</h3>
+                        <p>Instructor</p>
+                    </div>
+                </div>
             </footer>
         </main>
     </div>

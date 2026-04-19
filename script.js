@@ -73,11 +73,10 @@ document.addEventListener('click', (e) => {
 function changeLevel(level) {
     currentLevel = level;
     localStorage.setItem('eduTrack_currentLevel', level);
-    document.getElementById('currentLevelBtn').textContent = level;
+    const textEl = document.getElementById('currentLevelText');
+    if (textEl) textEl.textContent = level;
+    else document.getElementById('currentLevelBtn').textContent = level;
 
-    // Update breadcrumb text
-    const bcText = document.getElementById('bcLevelText');
-    if (bcText) bcText.textContent = level;
     document.querySelectorAll('.level-item').forEach(btn => {
         btn.classList.toggle('active', btn.textContent.trim() === level);
     });
@@ -88,6 +87,7 @@ function changeLevel(level) {
 
     // UI Elements
     checkAdminVisibility();
+    updateTeachers();
 
     // Update Data
     students = levelsData[currentLevel] || [];
@@ -244,21 +244,24 @@ function renderCards(data) {
         card.style.animationDelay = `${i * 40}ms`;
         card.innerHTML = `
             <div class="card-header">
-                <span class="student-name">${s.name}</span>
+                <div class="card-title-group">
+                    <span class="student-name">${s.name}</span>
+                    <div class="card-subtitle">
+                        <span class="class-label">Class ${s.cls}</span>
+                        <span class="sep">•</span>
+                        <span class="guardian-name">${s.guardian || 'No Guardian'}</span>
+                    </div>
+                </div>
                 <span class="score-badge ${scoreLevel(s.score)}">${s.score}</span>
             </div>
-            <div class="card-grid">
-                <div class="card-field"><label>Class</label><span class="class-badge">${s.cls}</span></div>
-                <div class="card-field"><label>Guardian</label><span class="sub-text">${s.guardian || '<span class="no-data">—</span>'}</span></div>
-            </div>
-            <div class="card-actions">
+            <div class="card-actions-wrapper">
                 ${waButton(s.phone)}
-                <div class="admin-only ${ghToken ? '' : 'hidden'}" style="margin-left:auto; display:flex; gap:8px;">
-                     <button class="action-icon-btn edit" onclick="openEditStudentModal(${i})">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
+                <div class="admin-actions admin-only ${ghToken ? '' : 'hidden'}">
+                    <button class="action-icon-btn edit" onclick="openEditStudentModal(${i})" title="Edit">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
                     </button>
-                    <button class="action-icon-btn delete" onclick="deleteStudent(${i})">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                    <button class="action-icon-btn delete" onclick="deleteStudent(${i})" title="Delete">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
             </div>`;
@@ -277,6 +280,7 @@ function applyFilters() {
         let matchSmart = true;
         if (smartFilter === 'high' && s.score < 40) matchSmart = false;
         if (smartFilter === 'low' && s.score >= 25) matchSmart = false;
+        if (smartFilter === 'mid' && (s.score < 25 || s.score >= 40)) matchSmart = false;
         return matchName && matchClass && matchSmart;
     });
 
@@ -325,19 +329,23 @@ function toggleSidebar() {
 function init() {
     // 1. Load Persisted Level
     const savedLevel = localStorage.getItem('eduTrack_currentLevel') || 'Level 3';
-    if (savedLevel) {
-        currentLevel = savedLevel;
-        document.getElementById('currentLevelBtn').textContent = savedLevel;
-        const bcText = document.getElementById('bcLevelText');
-        if (bcText) bcText.textContent = savedLevel;
-    }
+    currentLevel = savedLevel;
+    const textEl = document.getElementById('currentLevelText');
+    if (textEl) textEl.textContent = savedLevel;
+    else document.getElementById('currentLevelBtn').textContent = savedLevel;
+    updateTeachers();
 
-    // 2. Load Persisted Tab
-    const savedTab = localStorage.getItem('eduTrack_currentTab') || 'students';
-    const tabLink = document.querySelector(`.sidebar-nav a[data-tab="${savedTab}"]`);
+    // Highlight active level in dropdown
+    document.querySelectorAll('.level-item').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.trim() === savedLevel);
+    });
+
+    // 2. Reset to Default Tab
+    const defaultTab = 'students';
+    const tabLink = document.querySelector(`.sidebar-nav a[data-tab="${defaultTab}"]`);
     if (tabLink) {
         // Delay to ensure DOM sections are ready
-        setTimeout(() => switchTab(savedTab, tabLink), 50);
+        setTimeout(() => switchTab(defaultTab, tabLink), 50);
     }
 
     // 3. Populate and show
@@ -345,7 +353,7 @@ function init() {
         await fetchLevelsData(); // Fetch global students data FIRST
         checkAdminVisibility();
 
-        if (savedTab === 'students') {
+        if (defaultTab === 'students') {
             updateStats();
             initClassFilter();
             // Default sort: score desc
@@ -603,7 +611,6 @@ function drawWaveform(canvasId, color1, color2) {
 /* ── Tab Switching ──────────────────────────────────────────── */
 function switchTab(tab, linkEl, e) {
     if (e) e.preventDefault();
-    localStorage.setItem('eduTrack_currentTab', tab);
 
     // Update sidebar active state
     document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
@@ -1615,7 +1622,7 @@ async function fetchLevelsData() {
             if (Object.keys(levelsData).length === 0) {
                 levelsData = {
                     'Level 1': [], 'Level 2': [], 'Level 3': [
-                        { name: "ابانوب سامح", score: 43, cls: 4, guardian: "", phone: "201061666259" },
+                        { name: " سامح", score: 43, cls: 4, guardian: "", phone: "201061666259" },
                         { name: "ابانوب كريم", score: 41, cls: 5, guardian: "", phone: "201270138311" },
                         { name: "مارتن سمير", score: 0, cls: 0, guardian: "", phone: "201220571549" },
                         { name: "فادي عماد", score: 0, cls: 0, guardian: "", phone: "201229090239" },
@@ -1756,3 +1763,26 @@ initAttendanceUI = async function () {
 
 // Start the App
 document.addEventListener('DOMContentLoaded', init);
+const levelTeachers = {
+    "Level 1": ["->", "->", "->"],
+    "Level 2": ["->", "->", "->"],
+    "Level 3": ["Mr: Fady Wael", "Ms: Evan Nabil", "Ms: Nesma Saad"],
+    "Level 4": ["->", "->", "->"],
+    "Level 5": ["->", "->", "->"],
+    "Level 6": ["->", "->", "->"],
+    "Level 7": ["->", "->", "->"],
+    "Level 8": ["->", "->", "->"],
+};
+
+function updateTeachers() {
+    const t1 = document.getElementById('teacher1');
+    const t2 = document.getElementById('teacher2');
+    const t3 = document.getElementById('teacher3');
+
+    if (t1 && t2 && t3) {
+        const teachers = levelTeachers[currentLevel] || ["->", "->", "->"];
+        t1.textContent = teachers[0];
+        t2.textContent = teachers[1];
+        t3.textContent = teachers[2];
+    }
+}
