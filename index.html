@@ -8,7 +8,8 @@
     <meta name="description" content="Level 3 student results dashboard for Speak English academy.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cairo:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -23,10 +24,10 @@
         <div class="sidebar-brand">
             <div class="logo">E</div>
             <div class="brand-info">
-                <span class="m-title">Teachers</span>
-                <span class="m-subtitle" id="teacher1">Mr: Fady Wael</span>
-                <span class="m-subtitle" id="teacher2">Ms: Evan Nabil</span>
-                <span class="m-subtitle" id="teacher3">Ms: Nesma Saad</span>
+                <span class="m-title" data-i18n="teachers_title">Teachers</span>
+                <span class="m-subtitle" id="teacher1"><span data-i18n="mr">Mr</span>: Fady Wael</span>
+                <span class="m-subtitle" id="teacher2"><span data-i18n="ms">Ms</span>: Evan Nabil</span>
+                <span class="m-subtitle" id="teacher3"><span data-i18n="ms">Ms</span>: Nesma Saad</span>
             </div>
         </div>
         <nav class="sidebar-nav">
@@ -36,7 +37,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
                 </svg>
-                Students
+                <span data-i18n="nav_students">Students</span>
             </a>
             <a href="#" onclick="switchTab('content', this, event)" data-tab="content">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -44,7 +45,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
                 </svg>
-                Content
+                <span data-i18n="nav_content">Content</span>
             </a>
             <a href="#" onclick="switchTab('attendance', this, event)" id="nav-attendance" data-tab="attendance">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -52,7 +53,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                 </svg>
-                Attendance
+                <span data-i18n="nav_attendance">Attendance</span>
             </a>
         </nav>
         <!-- Premium Instructor card at bottom -->
@@ -62,7 +63,7 @@
                     <div class="avatar-premium">G</div>
                     <div class="info-premium">
                         <p>Gwargios Mouris</p>
-                        <span>Instructor</span>
+                        <span data-i18n="instructor_label">Developer</span>
                     </div>
                 </div>
             </div>
@@ -84,7 +85,7 @@
                 </svg>
             </button>
             <div class="breadcrumbs" id="navBreadcrumbs">
-                <span class="bc-current" id="navTitle">Students</span>
+                <span class="bc-current" id="navTitle" data-i18n="nav_students">Students</span>
             </div>
             <div class="navbar-right">
 
@@ -102,6 +103,14 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
                     </svg>
+                </button>
+
+                <button class="lang-toggle" onclick="toggleLanguage()" aria-label="Toggle Language"
+                    title="Toggle Language">
+                    <!-- Shown when in English -->
+                    <span class="icon-lang-ar">AR</span>
+                    <!-- Shown when in Arabic -->
+                    <span class="icon-lang-en">EN</span>
                 </button>
                 <div class="level-dropdown-container">
                     <button class="bc-level-pill" id="currentLevelBtn" onclick="toggleLevelMenu(event)">
@@ -129,7 +138,8 @@
 
             <!-- ── Stats Cards ──────────────────────────────────────── -->
             <section class="stats-grid" id="statsGrid">
-                <div class="stat-card">
+                <div class="stat-card" data-glow data-glow-color="blue">
+                    <div data-glow></div>
                     <div class="stat-icon blue">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor">
@@ -138,11 +148,12 @@
                         </svg>
                     </div>
                     <div class="stat-info">
-                        <div class="stat-label">Total Students</div>
+                        <div class="stat-label" data-i18n="total_students">Total Students</div>
                         <div class="stat-value" id="statTotal">—</div>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-glow data-glow-color="green">
+                    <div data-glow></div>
                     <div class="stat-icon green">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor">
@@ -151,11 +162,12 @@
                         </svg>
                     </div>
                     <div class="stat-info">
-                        <div class="stat-label">Class Average</div>
+                        <div class="stat-label" data-i18n="class_average">Class Average</div>
                         <div class="stat-value" id="statAvg">—</div>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-glow data-glow-color="orange">
+                    <div data-glow></div>
                     <div class="stat-icon orange">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor">
@@ -164,7 +176,7 @@
                         </svg>
                     </div>
                     <div class="stat-info">
-                        <div class="stat-label">Top Score</div>
+                        <div class="stat-label" data-i18n="top_score">Top Score</div>
                         <div class="stat-value" id="statTop">—</div>
                     </div>
                 </div>
@@ -178,12 +190,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>
-                    <input id="searchInput" type="text" placeholder="Search students..." oninput="applyFilters()"
-                        autocomplete="off">
+                    <input id="searchInput" type="text" placeholder="Search students..."
+                        data-i18n-placeholder="search_placeholder" oninput="applyFilters()" autocomplete="off">
                 </div>
                 <select class="filter-select" id="classFilter" title="Filter by class" aria-label="Filter by class"
                     onchange="applyFilters()">
-                    <option value="all">All Classes</option>
+                    <option value="all" data-i18n="all_classes">All Classes</option>
                 </select>
                 <span class="count-badge" id="countBadge">—</span>
                 <button class="add-student-btn admin-only hidden" onclick="openAddStudentModal()">
@@ -191,16 +203,20 @@
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
-                    Add Student
+                    <span data-i18n="add_student">Add Student</span>
                 </button>
             </div>
 
             <!-- Smart Filters -->
             <div class="smart-filters">
-                <button class="filter-pill active" onclick="setSmartFilter('all', event)">All</button>
-                <button class="filter-pill" onclick="setSmartFilter('high', event)">Top Students</button>
-                <button class="filter-pill" onclick="setSmartFilter('mid', event)">Solid Progress</button>
-                <button class="filter-pill" onclick="setSmartFilter('low', event)">Needs Attention</button>
+                <button class="filter-pill active" onclick="setSmartFilter('all', event)"
+                    data-i18n="filter_all">All</button>
+                <button class="filter-pill" onclick="setSmartFilter('high', event)" data-i18n="filter_top">Top
+                    Students</button>
+                <button class="filter-pill" onclick="setSmartFilter('mid', event)" data-i18n="filter_solid">Solid
+                    Progress</button>
+                <button class="filter-pill" onclick="setSmartFilter('low', event)" data-i18n="filter_needs">Needs
+                    Attention</button>
             </div>
 
             <!-- ── Table (desktop/tablet) ───────────────────────────── -->
@@ -209,15 +225,15 @@
                     <thead>
                         <tr>
                             <th scope="col" class="col-rank">#</th>
-                            <th scope="col" class="sortable" onclick="sort('name')" id="th-name">Name <span
-                                    class="sort-arrow"></span></th>
-                            <th scope="col" class="sortable" onclick="sort('score')" id="th-score">Score <span
-                                    class="sort-arrow"></span></th>
-                            <th scope="col" class="sortable" onclick="sort('cls')" id="th-cls">Class <span
-                                    class="sort-arrow"></span></th>
-                            <th scope="col">Parent / Guardian</th>
-                            <th scope="col">Contact</th>
-                            <th scope="col" class="admin-only hidden">Actions</th>
+                            <th scope="col" class="sortable" onclick="sort('name')" id="th-name"><span
+                                    data-i18n="col_name">Name</span> <span class="sort-arrow"></span></th>
+                            <th scope="col" class="sortable" onclick="sort('score')" id="th-score"><span
+                                    data-i18n="col_score">Score</span> <span class="sort-arrow"></span></th>
+                            <th scope="col" class="sortable" onclick="sort('cls')" id="th-cls"><span
+                                    data-i18n="col_class">Class</span> <span class="sort-arrow"></span></th>
+                            <th scope="col" data-i18n="col_guardian">Parent / Guardian</th>
+                            <th scope="col" class="admin-only hidden" data-i18n="col_contact">Contact</th>
+                            <th scope="col" class="admin-only hidden" data-i18n="col_actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="tBody"></tbody>
@@ -252,8 +268,8 @@
                 <!-- Empty state -->
                 <div class="empty-state hidden" id="emptyState">
                     <div class="empty-icon">🔍</div>
-                    <h3>No students found</h3>
-                    <p>Try adjusting your search or filter criteria.</p>
+                    <h3 data-i18n="no_students">No students found</h3>
+                    <p data-i18n="try_adjusting">Try adjusting your search or filter criteria.</p>
                 </div>
             </div>
 
@@ -269,15 +285,15 @@
             <!-- ── Content Section (Audio) ─────────────────────────── -->
             <section class="content-section hidden" id="contentSection">
                 <div class="content-header">
-                    <h2>Audio Content</h2>
-                    <p>Listen to or download the available audio materials</p>
+                    <h2 data-i18n="audio_content">Audio Content</h2>
+                    <p data-i18n="audio_desc">Listen to or download the available audio materials</p>
                 </div>
 
                 <!-- Content Empty State -->
                 <div class="empty-state hidden" id="emptyStateContent">
                     <div class="empty-icon">🎧</div>
-                    <h3>No Content Yet</h3>
-                    <p>Content for this level will be added soon.</p>
+                    <h3 data-i18n="no_content">No Content Yet</h3>
+                    <p data-i18n="content_soon">Content for this level will be added soon.</p>
                 </div>
 
                 <div class="audio-grid" id="audioGrid">
@@ -303,8 +319,8 @@
                             </div>
                         </div>
                         <div class="audio-card-body">
-                            <h3 class="audio-title">Lord's Prayer</h3>
-                            <p class="audio-subtitle">Audio Lesson</p>
+                            <h3 class="audio-title" id="audioTitle1">Lord's Prayer</h3>
+                            <p class="audio-subtitle" data-i18n="audio_lesson">Audio Lesson</p>
                             <div class="audio-player" id="player1">
                                 <div class="progress-container" onmousedown="startSeek(event, 0)"
                                     ontouchstart="startSeek(event, 0)">
@@ -329,8 +345,8 @@
                                             d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25Zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25Z"
                                             clip-rule="evenodd" />
                                     </svg>
-                                    <span class="action-label play-label">Play</span>
-                                    <span class="action-label pause-label hidden">Pause</span>
+                                    <span class="action-label play-label" data-i18n="play">Play</span>
+                                    <span class="action-label pause-label hidden" data-i18n="pause">Pause</span>
                                 </button>
                                 <a class="action-download" href="Lord's Prayer.mp3" download>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -338,7 +354,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                     </svg>
-                                    <span class="action-label">Download</span>
+                                    <span class="action-label" data-i18n="download">Download</span>
                                 </a>
                             </div>
                         </div>
@@ -365,8 +381,8 @@
                             </div>
                         </div>
                         <div class="audio-card-body">
-                            <h3 class="audio-title">The Trinitarian Formula</h3>
-                            <p class="audio-subtitle">Audio Lesson</p>
+                            <h3 class="audio-title" id="audioTitle2">The Trinitarian Formula</h3>
+                            <p class="audio-subtitle" data-i18n="audio_lesson">Audio Lesson</p>
                             <div class="audio-player" id="player2">
                                 <div class="progress-container" onmousedown="startSeek(event, 1)"
                                     ontouchstart="startSeek(event, 1)">
@@ -391,8 +407,8 @@
                                             d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25Zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25Z"
                                             clip-rule="evenodd" />
                                     </svg>
-                                    <span class="action-label play-label">Play</span>
-                                    <span class="action-label pause-label hidden">Pause</span>
+                                    <span class="action-label play-label" data-i18n="play">Play</span>
+                                    <span class="action-label pause-label hidden" data-i18n="pause">Pause</span>
                                 </button>
                                 <a class="action-download" href="The Trinitarian Formula.mp3" download>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -400,7 +416,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                     </svg>
-                                    <span class="action-label">Download</span>
+                                    <span class="action-label" data-i18n="download">Download</span>
                                 </a>
                             </div>
                         </div>
@@ -411,8 +427,8 @@
                 <!-- ── Course Curriculum ─────────────────────────────── -->
                 <div class="curriculum-section">
                     <div class="content-header">
-                        <h2>Course Curriculum</h2>
-                        <p>English Level 3 — Browse units and lessons</p>
+                        <h2 data-i18n="course_curriculum">Course Curriculum</h2>
+                        <p id="curriculumSub" data-i18n="curriculum_desc">English Level 3 — Browse units and lessons</p>
                     </div>
 
                     <div class="curriculum-units" id="curriculumUnits">
@@ -423,8 +439,9 @@
                                 <div class="unit-header-left">
                                     <span class="unit-number">01</span>
                                     <div class="unit-info">
-                                        <h3>Unit 1</h3>
-                                        <span class="unit-meta">3 Lessons + Revision</span>
+                                        <h3><span data-i18n="unit">Unit</span> 1</h3>
+                                        <span class="unit-meta">3 <span data-i18n="lessons">Lessons</span> + <span
+                                                data-i18n="revision">Revision</span></span>
                                     </div>
                                 </div>
                                 <svg class="unit-chevron" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -437,8 +454,9 @@
                                 <div class="lesson-card" data-lesson="1-1">
                                     <div class="lesson-icon lesson-icon-1">📖</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 1</h4>
-                                        <span class="lesson-file-count video-available">Video
+                                        <h4><span data-i18n="lesson">Lesson</span> 1</h4>
+                                        <span class="lesson-file-count video-available"
+                                            data-i18n="video_available">Video
                                             Available</span>
                                     </div>
                                     <div class="lesson-actions-beast">
@@ -450,7 +468,7 @@
                                                     d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"
                                                     clip-rule="evenodd" />
                                             </svg>
-                                            <span>Watch</span>
+                                            <span data-i18n="watch">Watch</span>
                                         </a>
                                         <a href="https://drive.google.com/uc?id=1Yvp7GsESwNgGfJQ5dvQp0B_jcm9TOiV4&export=download"
                                             target="_blank" rel="noopener noreferrer" class="action-btn-p download">
@@ -459,7 +477,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                             </svg>
-                                            <span>Download</span>
+                                            <span data-i18n="download">Download</span>
                                         </a>
                                     </div>
                                 </div>
@@ -469,8 +487,9 @@
                                 <div class="lesson-card" data-lesson="1-2">
                                     <div class="lesson-icon lesson-icon-2">📝</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 2</h4>
-                                        <span class="lesson-file-count video-available">Video
+                                        <h4><span data-i18n="lesson">Lesson</span> 2</h4>
+                                        <span class="lesson-file-count video-available"
+                                            data-i18n="video_available">Video
                                             Available</span>
                                     </div>
                                     <div class="lesson-actions-beast">
@@ -482,7 +501,7 @@
                                                     d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"
                                                     clip-rule="evenodd" />
                                             </svg>
-                                            <span>Watch</span>
+                                            <span data-i18n="watch">Watch</span>
                                         </a>
                                         <a href="https://drive.google.com/uc?id=12eiMKVu8bDHTAjRtb2JXm2nxb2NqPqMx&export=download"
                                             target="_blank" rel="noopener noreferrer" class="action-btn-p download">
@@ -491,7 +510,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                             </svg>
-                                            <span>Download</span>
+                                            <span data-i18n="download">Download</span>
                                         </a>
                                     </div>
                                 </div>
@@ -500,8 +519,9 @@
                                 <div class="lesson-card" data-lesson="1-3">
                                     <div class="lesson-icon lesson-icon-3">🎧</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 3</h4>
-                                        <span class="lesson-file-count video-available">Video
+                                        <h4><span data-i18n="lesson">Lesson</span> 3</h4>
+                                        <span class="lesson-file-count video-available"
+                                            data-i18n="video_available">Video
                                             Available</span>
                                     </div>
                                     <div class="lesson-actions-beast">
@@ -513,7 +533,7 @@
                                                     d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"
                                                     clip-rule="evenodd" />
                                             </svg>
-                                            <span>Watch</span>
+                                            <span data-i18n="watch">Watch</span>
                                         </a>
                                         <a href="https://drive.google.com/uc?id=12sXOgb0xJMfdGt0Z_xV2ORFsFEVdz0fW&export=download"
                                             target="_blank" rel="noopener noreferrer" class="action-btn-p download">
@@ -522,7 +542,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                             </svg>
-                                            <span>Download</span>
+                                            <span data-i18n="download">Download</span>
                                         </a>
                                     </div>
                                 </div>
@@ -531,8 +551,9 @@
                                 <div class="lesson-card lesson-revision" data-lesson="1-rev">
                                     <div class="lesson-icon lesson-icon-rev">📋</div>
                                     <div class="lesson-info">
-                                        <h4>Revision</h4>
-                                        <span class="lesson-file-count video-available">Video
+                                        <h4 data-i18n="revision">Revision</h4>
+                                        <span class="lesson-file-count video-available"
+                                            data-i18n="video_available">Video
                                             Available</span>
                                     </div>
                                     <div class="lesson-actions-beast">
@@ -544,7 +565,7 @@
                                                     d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"
                                                     clip-rule="evenodd" />
                                             </svg>
-                                            <span>Watch</span>
+                                            <span data-i18n="watch">Watch</span>
                                         </a>
                                         <a href="https://drive.google.com/uc?id=1Oo726VosBsKRNp_h4LmpR-f4kAJBr-qg&export=download"
                                             target="_blank" rel="noopener noreferrer" class="action-btn-p download">
@@ -553,7 +574,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                             </svg>
-                                            <span>Download</span>
+                                            <span data-i18n="download">Download</span>
                                         </a>
                                     </div>
                                 </div>
@@ -567,8 +588,9 @@
                                 <div class="unit-header-left">
                                     <span class="unit-number">02</span>
                                     <div class="unit-info">
-                                        <h3>Unit 2</h3>
-                                        <span class="unit-meta">3 Lessons + Revision</span>
+                                        <h3><span data-i18n="unit">Unit</span> 2</h3>
+                                        <span class="unit-meta">3 <span data-i18n="lessons">Lessons</span> + <span
+                                                data-i18n="revision">Revision</span></span>
                                     </div>
                                 </div>
                                 <svg class="unit-chevron" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -581,7 +603,8 @@
                                 <div class="lesson-card" data-lesson="2-1">
                                     <div class="lesson-icon lesson-icon-1">📖</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 1</h4><span class="lesson-file-count" id="fileCount-2-1">No files
+                                        <h4><span data-i18n="lesson">Lesson</span> 1</h4><span class="lesson-file-count"
+                                            id="fileCount-2-1" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('2-1')">
@@ -589,14 +612,15 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-2-1"></div>
                                 <div class="lesson-card" data-lesson="2-2">
                                     <div class="lesson-icon lesson-icon-2">📝</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 2</h4><span class="lesson-file-count" id="fileCount-2-2">No files
+                                        <h4><span data-i18n="lesson">Lesson</span> 2</h4><span class="lesson-file-count"
+                                            id="fileCount-2-2" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('2-2')">
@@ -604,14 +628,15 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-2-2"></div>
                                 <div class="lesson-card" data-lesson="2-3">
                                     <div class="lesson-icon lesson-icon-3">🎧</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 3</h4><span class="lesson-file-count" id="fileCount-2-3">No files
+                                        <h4><span data-i18n="lesson">Lesson</span> 3</h4><span class="lesson-file-count"
+                                            id="fileCount-2-3" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('2-3')">
@@ -619,14 +644,15 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-2-3"></div>
                                 <div class="lesson-card lesson-revision" data-lesson="2-rev">
                                     <div class="lesson-icon lesson-icon-rev">📋</div>
                                     <div class="lesson-info">
-                                        <h4>Revision</h4><span class="lesson-file-count" id="fileCount-2-rev">No files
+                                        <h4 data-i18n="revision">Revision</h4><span class="lesson-file-count"
+                                            id="fileCount-2-rev" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('2-rev')">
@@ -634,7 +660,7 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-2-rev"></div>
@@ -647,8 +673,9 @@
                                 <div class="unit-header-left">
                                     <span class="unit-number">03</span>
                                     <div class="unit-info">
-                                        <h3>Unit 3</h3>
-                                        <span class="unit-meta">3 Lessons + Revision</span>
+                                        <h3><span data-i18n="unit">Unit</span> 3</h3>
+                                        <span class="unit-meta">3 <span data-i18n="lessons">Lessons</span> + <span
+                                                data-i18n="revision">Revision</span></span>
                                     </div>
                                 </div>
                                 <svg class="unit-chevron" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -661,7 +688,8 @@
                                 <div class="lesson-card" data-lesson="3-1">
                                     <div class="lesson-icon lesson-icon-1">📖</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 1</h4><span class="lesson-file-count" id="fileCount-3-1">No files
+                                        <h4><span data-i18n="lesson">Lesson</span> 1</h4><span class="lesson-file-count"
+                                            id="fileCount-3-1" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('3-1')">
@@ -669,14 +697,15 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-3-1"></div>
                                 <div class="lesson-card" data-lesson="3-2">
                                     <div class="lesson-icon lesson-icon-2">📝</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 2</h4><span class="lesson-file-count" id="fileCount-3-2">No files
+                                        <h4><span data-i18n="lesson">Lesson</span> 2</h4><span class="lesson-file-count"
+                                            id="fileCount-3-2" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('3-2')">
@@ -684,14 +713,15 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-3-2"></div>
                                 <div class="lesson-card" data-lesson="3-3">
                                     <div class="lesson-icon lesson-icon-3">🎧</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 3</h4><span class="lesson-file-count" id="fileCount-3-3">No files
+                                        <h4><span data-i18n="lesson">Lesson</span> 3</h4><span class="lesson-file-count"
+                                            id="fileCount-3-3" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('3-3')">
@@ -699,14 +729,15 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-3-3"></div>
                                 <div class="lesson-card lesson-revision" data-lesson="3-rev">
                                     <div class="lesson-icon lesson-icon-rev">📋</div>
                                     <div class="lesson-info">
-                                        <h4>Revision</h4><span class="lesson-file-count" id="fileCount-3-rev">No files
+                                        <h4 data-i18n="revision">Revision</h4><span class="lesson-file-count"
+                                            id="fileCount-3-rev" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('3-rev')">
@@ -714,7 +745,7 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-3-rev"></div>
@@ -727,8 +758,9 @@
                                 <div class="unit-header-left">
                                     <span class="unit-number">04</span>
                                     <div class="unit-info">
-                                        <h3>Unit 4</h3>
-                                        <span class="unit-meta">3 Lessons + Revision</span>
+                                        <h3><span data-i18n="unit">Unit</span> 4</h3>
+                                        <span class="unit-meta">3 <span data-i18n="lessons">Lessons</span> + <span
+                                                data-i18n="revision">Revision</span></span>
                                     </div>
                                 </div>
                                 <svg class="unit-chevron" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -741,7 +773,8 @@
                                 <div class="lesson-card" data-lesson="4-1">
                                     <div class="lesson-icon lesson-icon-1">📖</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 1</h4><span class="lesson-file-count" id="fileCount-4-1">No files
+                                        <h4><span data-i18n="lesson">Lesson</span> 1</h4><span class="lesson-file-count"
+                                            id="fileCount-4-1" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('4-1')">
@@ -749,14 +782,15 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-4-1"></div>
                                 <div class="lesson-card" data-lesson="4-2">
                                     <div class="lesson-icon lesson-icon-2">📝</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 2</h4><span class="lesson-file-count" id="fileCount-4-2">No files
+                                        <h4><span data-i18n="lesson">Lesson</span> 2</h4><span class="lesson-file-count"
+                                            id="fileCount-4-2" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('4-2')">
@@ -764,14 +798,15 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-4-2"></div>
                                 <div class="lesson-card" data-lesson="4-3">
                                     <div class="lesson-icon lesson-icon-3">🎧</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 3</h4><span class="lesson-file-count" id="fileCount-4-3">No files
+                                        <h4><span data-i18n="lesson">Lesson</span> 3</h4><span class="lesson-file-count"
+                                            id="fileCount-4-3" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('4-3')">
@@ -779,14 +814,15 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-4-3"></div>
                                 <div class="lesson-card lesson-revision" data-lesson="4-rev">
                                     <div class="lesson-icon lesson-icon-rev">📋</div>
                                     <div class="lesson-info">
-                                        <h4>Revision</h4><span class="lesson-file-count" id="fileCount-4-rev">No files
+                                        <h4 data-i18n="revision">Revision</h4><span class="lesson-file-count"
+                                            id="fileCount-4-rev" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('4-rev')">
@@ -794,7 +830,7 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-4-rev"></div>
@@ -807,8 +843,9 @@
                                 <div class="unit-header-left">
                                     <span class="unit-number">05</span>
                                     <div class="unit-info">
-                                        <h3>Unit 5</h3>
-                                        <span class="unit-meta">3 Lessons + Revision</span>
+                                        <h3><span data-i18n="unit">Unit</span> 5</h3>
+                                        <span class="unit-meta">3 <span data-i18n="lessons">Lessons</span> + <span
+                                                data-i18n="revision">Revision</span></span>
                                     </div>
                                 </div>
                                 <svg class="unit-chevron" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -821,7 +858,8 @@
                                 <div class="lesson-card" data-lesson="5-1">
                                     <div class="lesson-icon lesson-icon-1">📖</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 1</h4><span class="lesson-file-count" id="fileCount-5-1">No files
+                                        <h4><span data-i18n="lesson">Lesson</span> 1</h4><span class="lesson-file-count"
+                                            id="fileCount-5-1" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('5-1')">
@@ -829,14 +867,15 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-5-1"></div>
                                 <div class="lesson-card" data-lesson="5-2">
                                     <div class="lesson-icon lesson-icon-2">📝</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 2</h4><span class="lesson-file-count" id="fileCount-5-2">No files
+                                        <h4><span data-i18n="lesson">Lesson</span> 2</h4><span class="lesson-file-count"
+                                            id="fileCount-5-2" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('5-2')">
@@ -844,14 +883,15 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-5-2"></div>
                                 <div class="lesson-card" data-lesson="5-3">
                                     <div class="lesson-icon lesson-icon-3">🎧</div>
                                     <div class="lesson-info">
-                                        <h4>Lesson 3</h4><span class="lesson-file-count" id="fileCount-5-3">No files
+                                        <h4><span data-i18n="lesson">Lesson</span> 3</h4><span class="lesson-file-count"
+                                            id="fileCount-5-3" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('5-3')">
@@ -859,14 +899,15 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-5-3"></div>
                                 <div class="lesson-card lesson-revision" data-lesson="5-rev">
                                     <div class="lesson-icon lesson-icon-rev">📋</div>
                                     <div class="lesson-info">
-                                        <h4>Revision</h4><span class="lesson-file-count" id="fileCount-5-rev">No files
+                                        <h4 data-i18n="revision">Revision</h4><span class="lesson-file-count"
+                                            id="fileCount-5-rev" data-i18n="no_files">No files
                                             yet</span>
                                     </div>
                                     <button class="upload-btn admin-only hidden" onclick="promptVideoLink('5-rev')">
@@ -874,7 +915,7 @@
                                             stroke-width="2" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                                        </svg> Upload
+                                        </svg> <span data-i18n="upload">Upload</span>
                                     </button>
                                 </div>
                                 <div class="file-preview-area" id="files-5-rev"></div>
@@ -895,14 +936,19 @@
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
                         </svg>
-                        <h3>Admin Access Required</h3>
-                        <p>Enter credentials to manage <strong id="authLevelName">this level</strong>.</p>
+                        <h3 data-i18n="admin_access_required">Admin Access Required</h3>
+                        <p><span data-i18n="enter_credentials">Enter credentials to manage</span> <strong
+                                id="authLevelName">this level</strong>.</p>
                         <input type="password" id="ghTokenInput" class="auth-input"
-                            placeholder="GitHub Token (ghp_xxxxxxxxxxxx)" autocomplete="off">
+                            placeholder="GitHub Token (ghp_xxxxxxxxxxxx)" data-i18n-placeholder="gh_token_placeholder"
+                            autocomplete="off">
                         <input type="password" id="levelPassInput" class="auth-input" placeholder="Level Password"
-                            autocomplete="off" style="margin-top: 0.75rem;">
-                        <button class="auth-btn" id="authBtn" onclick="loginToGitHub()">Authenticate</button>
-                        <div id="authError" class="auth-error hidden">Invalid credentials.</div>
+                            data-i18n-placeholder="level_pass_placeholder" autocomplete="off"
+                            style="margin-top: 0.75rem;">
+                        <button class="auth-btn" id="authBtn" onclick="loginToGitHub()"
+                            data-i18n="authenticate">Authenticate</button>
+                        <div id="authError" class="auth-error hidden" data-i18n="invalid_credentials">Invalid
+                            credentials.</div>
                     </div>
                 </div>
 
@@ -910,8 +956,8 @@
                 <div id="attendanceDashboard" class="attendance-dashboard hidden">
                     <div class="content-header attendance-header">
                         <div>
-                            <h2>Session Attendance</h2>
-                            <p>Track student presence and review past sessions</p>
+                            <h2 data-i18n="session_attendance">Session Attendance</h2>
+                            <p data-i18n="track_presence">Track student presence and review past sessions</p>
                         </div>
                         <div class="attendance-controls">
                             <button class="results-btn" onclick="showAllResults()" title="Show All Results">
@@ -922,7 +968,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
                                 </svg>
-                                <span>Results</span>
+                                <span data-i18n="results">Results</span>
                             </button>
                             <div class="date-trigger-wrapper">
                                 <input type="text" id="attendanceDate" class="date-input" title="Attendance Date"
@@ -963,8 +1009,10 @@
 
                     <!-- Live Attendance Counter -->
                     <div class="live-summary" id="liveAttendanceSummary">
-                        <div class="summary-item"><span id="liveAttPresent" class="present-count">0</span> Present</div>
-                        <div class="summary-item"><span id="liveAttAbsent" class="absent-count">0</span> Absent</div>
+                        <div class="summary-item"><span id="liveAttPresent" class="present-count">0</span> <span
+                                data-i18n="present">Present</span></div>
+                        <div class="summary-item"><span id="liveAttAbsent" class="absent-count">0</span> <span
+                                data-i18n="absent">Absent</span></div>
                     </div>
 
                     <div class="attendance-grid" id="attendanceGrid">
@@ -978,13 +1026,14 @@
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                             </svg>
-                            Save Attendance
+                            <span data-i18n="save_attendance">Save Attendance</span>
                         </button>
-                        <div id="attendanceMessage" class="attendance-message hidden">Saved to GitHub!</div>
+                        <div id="attendanceMessage" class="attendance-message hidden" data-i18n="saved_github">Saved to
+                            GitHub!</div>
                     </div>
 
                     <div class="attendance-history-section">
-                        <h3>Recent Sessions</h3>
+                        <h3 data-i18n="recent_sessions">Recent Sessions</h3>
                         <div class="history-list" id="attendanceHistory">
                             <!-- Dynamic History Cards Rendered via JS -->
                         </div>
@@ -994,7 +1043,7 @@
                     <div id="resultsModal" class="modal-overlay hidden">
                         <div class="modal-content results-modal" onclick="event.stopPropagation()">
                             <div class="modal-header">
-                                <h2>Total Attendance</h2>
+                                <h2 data-i18n="total_attendance">Total Attendance</h2>
                                 <button class="close-modal" onclick="closeResultsModal()">&times;</button>
                             </div>
                             <div class="results-list-container" id="resultsModalGrid">
@@ -1010,9 +1059,9 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.244 2.244 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                         </svg>
-                        <span>Delete Session</span>
+                        <span data-i18n="delete_session">Delete Session</span>
                     </button>
                     <button onclick="clearCurrentSessionData()" class="context-item clear">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -1020,7 +1069,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                         </svg>
-                        <span>Clear Data Only</span>
+                        <span data-i18n="clear_data_only">Clear Data Only</span>
                     </button>
                 </div>
             </section>
@@ -1031,7 +1080,7 @@
                     <div class="instructor-avatar">G</div>
                     <div class="instructor-info">
                         <h3>Gwargios Mouris</h3>
-                        <p>Instructor</p>
+                        <p data-i18n="instructor_label">Developer</p>
                     </div>
                 </div>
             </footer>
@@ -1042,36 +1091,41 @@
     <div id="studentModal" class="modal hidden">
         <div class="modal-content glass">
             <div class="modal-header">
-                <h2 id="modalTitle">Add New Student</h2>
+                <h2 id="modalTitle" data-i18n="add_new_student">Add New Student</h2>
                 <button class="close-btn" onclick="closeStudentModal()">&times;</button>
             </div>
             <form id="studentForm" onsubmit="handleStudentSubmit(event)">
                 <input type="hidden" id="editStudentIndex">
                 <div class="form-group">
-                    <label>Student Name</label>
-                    <input type="text" id="stdName" required placeholder="Ex: Ahmed Mohamed">
+                    <label data-i18n="std_name">Student Name</label>
+                    <input type="text" id="stdName" required placeholder="Ex: Ahmed Mohamed"
+                        data-i18n-placeholder="ex_name">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Score</label>
+                        <label data-i18n="col_score">Score</label>
                         <input type="number" id="stdScore" required min="0" max="100" value="0">
                     </div>
                     <div class="form-group">
-                        <label>Class</label>
+                        <label data-i18n="col_class">Class</label>
                         <input type="number" id="stdClass" required min="1" value="1">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Guardian Name</label>
-                    <input type="text" id="stdGuardian" placeholder="Father or Mother name">
+                    <label data-i18n="col_guardian">Guardian Name</label>
+                    <input type="text" id="stdGuardian" placeholder="Father or Mother name"
+                        data-i18n-placeholder="ex_guardian">
                 </div>
                 <div class="form-group">
-                    <label>WhatsApp Phone (with 20)</label>
-                    <input type="text" id="stdPhone" placeholder="Ex: 201234567890">
+                    <label><span data-i18n="wa_phone">WhatsApp Phone</span> (<span data-i18n="with_20">with
+                            20</span>)</label>
+                    <input type="text" id="stdPhone" placeholder="Ex: 201234567890" data-i18n-placeholder="ex_phone">
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn-secondary" onclick="closeStudentModal()">Cancel</button>
-                    <button type="submit" class="btn-primary" id="stdSubmitBtn">Save Student</button>
+                    <button type="button" class="btn-secondary" onclick="closeStudentModal()"
+                        data-i18n="cancel">Cancel</button>
+                    <button type="submit" class="btn-primary" id="stdSubmitBtn" data-i18n="save_student">Save
+                        Student</button>
                 </div>
             </form>
         </div>

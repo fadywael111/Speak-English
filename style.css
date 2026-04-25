@@ -52,6 +52,130 @@
   --transition: .2s cubic-bezier(.4, 0, .2, 1);
 }
 
+/* ── RTL Support ────────────────────────────────────────────────── */
+html[lang="ar"] {
+  font-family: 'Cairo', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+[dir="rtl"] .sidebar {
+  left: auto;
+  right: 0;
+  border-right: none;
+  border-left: 1px solid var(--gray-200);
+  transform: translateX(100%);
+}
+
+[dir="rtl"] .sidebar.open {
+  transform: translateX(0);
+}
+
+[dir="rtl"] .main-wrapper {
+  margin-left: 0;
+  margin-right: var(--sidebar-w);
+}
+
+@media(max-width:1024px) {
+  [dir="rtl"] .main-wrapper {
+    margin-right: 0;
+  }
+}
+
+[dir="rtl"] .navbar {
+  padding: 0 max(24px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+}
+
+[dir="rtl"] .navbar-right {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .search-box input {
+  padding: 10px 42px 10px 14px;
+}
+
+[dir="rtl"] .search-box svg {
+  left: auto;
+  right: 14px;
+}
+
+[dir="rtl"] .filter-select {
+  padding: 10px 14px 10px 36px;
+  background-position: left 12px center;
+}
+
+[dir="rtl"] .table-card th {
+  text-align: right;
+}
+
+[dir="rtl"] .unit-chevron {
+  transform: rotate(0deg);
+}
+
+[dir="rtl"] .unit-block.open .unit-chevron {
+  transform: rotate(180deg);
+}
+
+[dir="rtl"] .sidebar-footer .info {
+  text-align: right;
+}
+
+[dir="rtl"] .modal-content {
+  text-align: right;
+}
+
+[dir="rtl"] .close-btn,
+[dir="rtl"] .close-modal {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* ── Language Toggle ───────────────────────────────────────────── */
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--gray-600);
+  transition: all var(--transition);
+  border: 1px solid var(--gray-200);
+  background: var(--gray-100);
+  min-height: 44px;
+  min-width: 44px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+@media(max-width:480px) {
+  .lang-toggle {
+    width: 36px;
+    height: 36px
+  }
+}
+
+.lang-toggle:hover {
+  background: var(--gray-200);
+  color: var(--gray-900);
+}
+
+.icon-lang-ar {
+  display: block;
+}
+
+.icon-lang-en {
+  display: none;
+}
+
+html[lang="ar"] .icon-lang-ar {
+  display: none;
+}
+
+html[lang="ar"] .icon-lang-en {
+  display: block;
+}
+
 /* ── Reset ──────────────────────────────────────────────────────── */
 *,
 *::before,
@@ -5228,4 +5352,163 @@ html[data-theme="dark"] .level-item:hover {
 html[data-theme="dark"] .level-item.active {
   background: rgba(99, 102, 241, 0.2);
   color: var(--primary-400);
+}
+
+/* ── Glow Card Effects (Spotlight) ────────────────────────────────── */
+.stat-card[data-glow] {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Default (Light Mode) text colors */
+.stat-card[data-glow] .stat-label {
+  color: var(--gray-500);
+}
+
+.stat-card[data-glow] .stat-value {
+  color: var(--gray-900);
+}
+
+/* Dark Mode specific background and text for glow cards */
+html[data-theme="dark"] .stat-card[data-glow] {
+  background: #151515;
+  /* Dark background matching the image */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  /* Subtle default border */
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
+  /* Stronger shadow */
+}
+
+html[data-theme="dark"] .stat-card[data-glow] .stat-label {
+  color: #9ca3af;
+  /* Gray 400 */
+}
+
+html[data-theme="dark"] .stat-card[data-glow] .stat-value {
+  color: #f9fafb;
+  /* Gray 50 */
+}
+
+/* Ensure icons adapt well */
+.stat-card[data-glow] .stat-icon.blue {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+}
+
+.stat-card[data-glow] .stat-icon.green {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.stat-card[data-glow] .stat-icon.orange {
+  background: rgba(249, 115, 22, 0.15);
+  color: #fb923c;
+}
+
+/* Remove default hover effects that conflict */
+.stat-card[data-glow]:hover {
+  border-color: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+/* The glowing border overlay */
+.stat-card[data-glow]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Draw inside to prevent overflow clipping */
+  border-radius: inherit;
+  padding: 2px;
+  /* Thicker border (2px) */
+  background: radial-gradient(500px circle at var(--mouse-x, -100px) var(--mouse-y, -100px),
+      var(--glow-color, rgba(255, 255, 255, 0.8)),
+      transparent 40%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+/* The inner glow overlay */
+.stat-card[data-glow]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(500px circle at var(--mouse-x, -100px) var(--mouse-y, -100px),
+      var(--glow-color-inner, rgba(255, 255, 255, 0.05)),
+      transparent 40%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+/* Specific colors */
+.stat-card[data-glow-color="blue"] {
+  --glow-color: rgba(168, 85, 247, 0.9);
+  /* Purple to match image */
+  --glow-color-inner: rgba(168, 85, 247, 0.08);
+}
+
+.stat-card[data-glow-color="green"] {
+  --glow-color: rgba(34, 197, 94, 0.9);
+  --glow-color-inner: rgba(34, 197, 94, 0.08);
+}
+
+.stat-card[data-glow-color="orange"] {
+  --glow-color: rgba(249, 115, 22, 0.9);
+  --glow-color-inner: rgba(249, 115, 22, 0.08);
+}
+
+/* Only show glow on hover of the individual card to prevent color bleeding */
+.stat-card[data-glow]:hover::before,
+.stat-card[data-glow]:hover::after {
+  opacity: 1;
+}
+
+/* ── Student Cards & Table Rows Spotlight ───────────────────────── */
+.student-card[data-glow],
+tr[data-glow] {
+  position: relative;
+}
+
+.student-card[data-glow] {
+  overflow: hidden;
+}
+
+/* Prevent default row hover background from taking over */
+.table-card tbody tr[data-glow]:hover,
+html[data-theme="dark"] .table-card tbody tr[data-glow]:hover {
+  background: transparent !important;
+}
+
+.student-card[data-glow]::before,
+tr[data-glow]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  /* Thinner border for students (1px) */
+  background: radial-gradient(600px circle at var(--mouse-x, -100px) var(--mouse-y, -100px),
+      var(--glow-color, rgba(168, 85, 247, 0.7)),
+      /* Default subtle purple */
+      transparent 40%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.student-card[data-glow]:hover::before,
+tr[data-glow]:hover::before {
+  opacity: 1;
 }

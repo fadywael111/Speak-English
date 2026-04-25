@@ -11,6 +11,247 @@ let levelsSha = '';
 let currentLevel = localStorage.getItem('eduTrack_currentLevel') || 'Level 3';
 let students = levelsData[currentLevel] || [];
 
+/* ── Translation System ───────────────────────────────────────── */
+const translations = {
+    en: {
+        lang_name: "العربية",
+        mr: "Mr",
+        ms: "Ms",
+        teachers_title: "Instructors",
+        nav_students: "Students",
+        nav_content: "Content",
+        nav_attendance: "Attendance",
+        instructor_label: "Developer",
+        total_students: "Total Students",
+        class_average: "Class Average",
+        top_score: "Top Score",
+        search_placeholder: "Search students...",
+        all_classes: "All Classes",
+        class_prefix: "Class ",
+        add_student: "Add Student",
+        filter_all: "All",
+        filter_top: "Top Students",
+        filter_solid: "Solid Progress",
+        filter_needs: "Needs Attention",
+        col_name: "Name",
+        col_score: "Score",
+        col_class: "Class",
+        col_guardian: "Parent / Guardian",
+        col_contact: "Contact",
+        col_actions: "Actions",
+        no_students: "No students found",
+        try_adjusting: "Try adjusting your search or filter criteria.",
+        audio_content: "Audio Content",
+        audio_desc: "Listen to or download the available audio materials",
+        no_content: "No Content Yet",
+        content_soon: "Content for this level will be added soon.",
+        course_curriculum: "Course Curriculum",
+        curriculum_desc: "English Level {level} — Browse units and lessons",
+        unit: "Unit",
+        lesson: "Lesson",
+        lessons: "Lessons",
+        revision: "Revision",
+        watch: "Watch",
+        download: "Download",
+        no_files: "No files yet",
+        upload: "Upload",
+        video_available: "Video Available",
+        contact_btn: "Contact",
+        copy_btn: "Copy",
+        copied: "Copied!",
+        present: "Present",
+        absent: "Absent",
+        admin_access_required: "Admin Access Required",
+        enter_credentials: "Enter credentials to manage",
+        gh_token_placeholder: "GitHub Token (ghp_xxxxxxxxxxxx)",
+        level_pass_placeholder: "Level Password",
+        authenticate: "Authenticate",
+        invalid_credentials: "Invalid credentials.",
+        session_attendance: "Session Attendance",
+        track_presence: "Track student presence and review past sessions",
+        results: "Results",
+        save_attendance: "Save Attendance",
+        saved_github: "Saved to GitHub!",
+        recent_sessions: "Recent Sessions",
+        total_attendance: "Total Attendance",
+        delete_session: "Delete Session",
+        clear_data_only: "Clear Data Only",
+        add_new_student: "Add New Student",
+        edit_student: "Edit Student",
+        std_name: "Student Name",
+        ex_name: "Ex: Ahmed Mohamed",
+        ex_guardian: "Father or Mother name",
+        wa_phone: "WhatsApp Phone",
+        with_20: "with 20",
+        ex_phone: "Ex: 201234567890",
+        cancel: "Cancel",
+        save_student: "Save Student",
+        no_guardian: "No Guardian",
+        level_prefix: "Level ",
+        days: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+        delete_confirm: "Are you sure you want to delete the session for {date}?",
+        clear_confirm: "Clear all attendance data for {date}?",
+        delete_student_confirm: "Are you sure you want to delete this student?",
+        session_exists: "A session for this date already exists. Loading its data...",
+        admin_only_error: "You must be an admin for this level to perform this action.",
+        invalid_drive_link: "Invalid Google Drive link format.",
+        sync_error: "Sync Error: ",
+        quiz_ready: "Quiz Ready",
+        open_quiz: "Open Quiz",
+        enter_video_link: "Enter Google Drive Video Link:",
+        enter_quiz_link: "Enter Quiz Link (Google Form, etc.):",
+        play: "Play",
+        pause: "Pause",
+        audio_lesson: "Audio Lesson"
+    },
+    ar: {
+        lang_name: "English",
+        mr: "Mr/ ",
+        ms: "Ms/ ",
+        teachers_title: "Instructors",
+        nav_students: "الطلاب",
+        nav_content: "المحتوى",
+        nav_attendance: "الحضور",
+        instructor_label: "المطور",
+        total_students: "إجمالي الطلاب",
+        class_average: "متوسط الدرجات",
+        top_score: "أعلى درجة",
+        search_placeholder: "ابحث عن طالب...",
+        all_classes: "كل المجموعات",
+        class_prefix: "مجموعة ",
+        add_student: "إضافة طالب",
+        filter_all: "الكل",
+        filter_top: "المتفوقون",
+        filter_solid: "تقدم ثابت",
+        filter_needs: "يحتاج اهتمام",
+        col_name: "الاسم",
+        col_score: "الدرجة",
+        col_class: "المجموعة",
+        col_guardian: "ولي الأمر",
+        col_contact: "التواصل",
+        col_actions: "إجراءات",
+        no_students: "لم يتم العثور على طلاب",
+        try_adjusting: "حاول تغيير معايير البحث أو التصفية.",
+        audio_content: "المحتوى الصوتي",
+        audio_desc: "استمع إلى أو قم بتحميل المواد الصوتية المتاحة",
+        no_content: "لا يوجد محتوى بعد",
+        content_soon: "سيتم إضافة المحتوى لهذا المستوى قريباً.",
+        course_curriculum: "منهج الدورة",
+        curriculum_desc: "اللغة الإنجليزية المستوى {level} — تصفح الوحدات والدروس",
+        unit: "الوحدة",
+        lesson: "الدرس",
+        lessons: "دروس",
+        revision: "مراجعة",
+        watch: "مشاهدة",
+        download: "تحميل",
+        no_files: "لا توجد ملفات بعد",
+        upload: "رفع",
+        video_available: "الفيديو متاح",
+        contact_btn: "تواصل",
+        copy_btn: "نسخ",
+        copied: "تم النسخ!",
+        present: "حاضر",
+        absent: "غائب",
+        admin_access_required: "مطلوب صلاحية المسؤول",
+        enter_credentials: "أدخل البيانات لإدارة",
+        gh_token_placeholder: "كود GitHub (ghp_xxxxxxxxxxxx)",
+        level_pass_placeholder: "كلمة مرور المستوى",
+        authenticate: "دخول",
+        invalid_credentials: "البيانات غير صحيحة.",
+        session_attendance: "قسم الحضور ",
+        track_presence: "تتبع حضور الطلاب ومراجعة الجلسات السابقة",
+        results: "النتائج",
+        save_attendance: "حفظ الحضور",
+        saved_github: "تم الحفظ بنجاح!",
+        recent_sessions: "الجلسات الأخيرة",
+        total_attendance: "إجمالي الحضور",
+        delete_session: "حذف الجلسة",
+        clear_data_only: "مسح البيانات فقط",
+        add_new_student: "إضافة طالب جديد",
+        edit_student: "تعديل بيانات طالب",
+        std_name: "اسم الطالب",
+        ex_name: "مثال: أحمد محمد",
+        ex_guardian: "اسم الأب أو الأم",
+        wa_phone: "رقم الواتساب",
+        with_20: "مع كود الدولة 20",
+        ex_phone: "مثال: 201234567890",
+        cancel: "إلغاء",
+        save_student: "حفظ البيانات",
+        no_guardian: "لا يوجد ولي أمر",
+        level_prefix: "المستوى ",
+        days: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
+        delete_confirm: "هل أنت متأكد من حذف جلسة يوم {date}؟",
+        clear_confirm: "مسح كل بيانات الحضور ليوم {date}؟",
+        delete_student_confirm: "هل أنت متأكد من حذف هذا الطالب؟",
+        session_exists: "توجد جلسة لهذا التاريخ بالفعل. يتم تحميل بياناتها...",
+        admin_only_error: "يجب أن تكون مسؤولاً لهذا المستوى للقيام بهذا الإجراء.",
+        invalid_drive_link: "تنسيق رابط Google Drive غير صالح.",
+        sync_error: "خطأ في المزامنة: ",
+        quiz_ready: "الاختبار جاهز",
+        open_quiz: "فتح الاختبار",
+        enter_video_link: "أدخل رابط فيديو Google Drive:",
+        enter_quiz_link: "أدخل رابط الاختبار (Google Form، إلخ):",
+        play: "تشغيل",
+        pause: "إيقاف",
+        audio_lesson: "درس صوتي"
+    }
+};
+
+let currentLang = localStorage.getItem('eduTrack_lang') || 'en';
+
+function toggleLanguage() {
+    currentLang = currentLang === 'en' ? 'ar' : 'en';
+    localStorage.setItem('eduTrack_lang', currentLang);
+    applyLanguage();
+    // Refresh UI
+    initClassFilter();
+    applyFilters();
+    updateStats();
+    updateTeachers();
+    if (typeof applyCurriculumData === 'function') applyCurriculumData();
+    if (typeof initAttendanceUI === 'function' && !document.getElementById('attendanceSection').classList.contains('hidden')) {
+        initAttendanceUI();
+    }
+}
+
+function applyLanguage() {
+    const t = translations[currentLang];
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = 'ltr';
+
+    // Update all elements with data-i18n
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.textContent = t[key];
+    });
+
+    // Update placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (t[key]) el.placeholder = t[key];
+    });
+
+
+
+    // Update dynamic text (Level names, etc.)
+    const lvlBtnText = document.getElementById('currentLevelText');
+    if (lvlBtnText) {
+        lvlBtnText.textContent = currentLevel.replace('Level', t.level_prefix);
+    }
+
+    const currSub = document.getElementById('curriculumSub');
+    if (currSub) {
+        currSub.textContent = t.curriculum_desc.replace('{level}', currentLevel.split(' ')[1]);
+    }
+
+    // Update navbar title
+    const navTitle = document.getElementById('navTitle');
+    if (navTitle) {
+        const activeTab = document.querySelector('.sidebar-nav a.active').getAttribute('data-tab');
+        navTitle.textContent = t['nav_' + activeTab];
+    }
+}
+
 /* ── Helpers ─────────────────────────────────────────────────── */
 const WA_ICON = `<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>`;
 
@@ -21,23 +262,25 @@ function scoreLevel(s) {
 const COPY_ICON = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"/></svg>`;
 
 function copyPhone(phone, btn) {
+    const t = translations[currentLang];
     const display = phone.replace(/^20/, '0');
     navigator.clipboard.writeText(display).then(() => {
-        btn.innerHTML = '✓ Copied!';
+        btn.innerHTML = '✓ ' + t.copied;
         btn.classList.add('copied');
         setTimeout(() => {
-            btn.innerHTML = COPY_ICON + ' Copy';
+            btn.innerHTML = COPY_ICON + ' ' + t.copy_btn;
             btn.classList.remove('copied');
         }, 1500);
     });
 }
 
 function waButton(phone) {
+    const t = translations[currentLang];
     if (!phone) return '<span class="no-data">—</span>';
     const display = phone.replace(/^20/, '0');
     return `<div class="contact-actions">`
-        + `<a class="wa-btn" href="https://wa.me/${phone}" target="_blank" rel="noopener">${WA_ICON} Contact</a>`
-        + `<button class="copy-btn" onclick="copyPhone('${phone}', this)">${COPY_ICON} Copy</button>`
+        + `<a class="wa-btn" href="https://wa.me/${phone}" target="_blank" rel="noopener">${WA_ICON} ${t.contact_btn}</a>`
+        + `<button class="copy-btn" onclick="copyPhone('${phone}', this)">${COPY_ICON} ${t.copy_btn}</button>`
         + `</div>`;
 }
 
@@ -74,8 +317,10 @@ function changeLevel(level) {
     currentLevel = level;
     localStorage.setItem('eduTrack_currentLevel', level);
     const textEl = document.getElementById('currentLevelText');
-    if (textEl) textEl.textContent = level;
-    else document.getElementById('currentLevelBtn').textContent = level;
+    const t = translations[currentLang];
+
+    if (textEl) textEl.textContent = level.replace('Level', t.level_prefix);
+    else document.getElementById('currentLevelBtn').textContent = level.replace('Level', t.level_prefix);
 
     document.querySelectorAll('.level-item').forEach(btn => {
         btn.classList.toggle('active', btn.textContent.trim() === level);
@@ -110,7 +355,7 @@ function changeLevel(level) {
 
         // Reset info text
         if (info) {
-            info.textContent = "No files yet";
+            info.textContent = t.no_files;
             info.classList.remove('video-available', 'video-ready', 'quiz-ready');
         }
 
@@ -122,7 +367,7 @@ function changeLevel(level) {
             btn.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                </svg> Upload
+                </svg> ${t.upload}
             `;
             card.appendChild(btn);
         }
@@ -172,20 +417,21 @@ function setSmartFilter(val, e) {
 function updateStats() {
     const n = students.length;
     document.getElementById('statTotal').textContent = n;
-    document.getElementById('statAvg').textContent = (students.reduce((a, s) => a + s.score, 0) / n).toFixed(1);
-    document.getElementById('statTop').textContent = Math.max(...students.map(s => s.score));
+    document.getElementById('statAvg').textContent = n > 0 ? (students.reduce((a, s) => a + s.score, 0) / n).toFixed(1) : "0.0";
+    document.getElementById('statTop').textContent = n > 0 ? Math.max(...students.map(s => s.score)) : "0";
 }
 
 /* ── Populate class filter dropdown ──────────────────────────── */
 function initClassFilter() {
+    const t = translations[currentLang];
     const classes = [...new Set(students.map(s => s.cls))].sort();
     const sel = document.getElementById('classFilter');
     if (sel) {
-        sel.innerHTML = '<option value="all">All Classes</option>';
+        sel.innerHTML = `<option value="all">${t.all_classes}</option>`;
         classes.forEach(c => {
             const opt = document.createElement('option');
             opt.value = c;
-            opt.textContent = 'Class ' + c;
+            opt.textContent = t.class_prefix + c;
             sel.appendChild(opt);
         });
     }
@@ -209,25 +455,28 @@ function renderTable(data) {
     }
     empty.classList.add('hidden');
 
-    tbody.innerHTML = data.map((s, i) => `
-        <tr class="fade-in" style="animation-delay:${i * 30}ms">
+    tbody.innerHTML = data.map((s, i) => {
+        const t = translations[currentLang];
+        return `
+        <tr class="fade-in" data-glow style="animation-delay:${i * 30}ms">
             <td><span class="student-rank">${i + 1}</span></td>
             <td><span class="student-name">${s.name}</span></td>
             <td><span class="score-badge ${scoreLevel(s.score)}">${s.score}</span></td>
             <td><span class="class-badge">${s.cls}</span></td>
             <td class="sub-text">${s.guardian || '<span class="no-data">—</span>'}</td>
-            <td>${waButton(s.phone)}</td>
+            <td class="admin-only ${isLevelAdmin() ? '' : 'hidden'}">${waButton(s.phone)}</td>
             <td class="admin-only ${isLevelAdmin() ? '' : 'hidden'}">
                 <div class="td-actions">
-                    <button class="action-icon-btn edit" onclick="openEditStudentModal(${i})" title="Edit Student">
+                    <button class="action-icon-btn edit" onclick="openEditStudentModal(${i})" title="${t.edit_student}">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
                     </button>
-                    <button class="action-icon-btn delete" onclick="deleteStudent(${i})" title="Delete Student">
+                    <button class="action-icon-btn delete" onclick="deleteStudent(${i})" title="${t.col_actions}">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
             </td>
-        </tr>`).join('');
+        </tr>`;
+    }).join('');
 }
 
 /* ── Render Cards (mobile) ───────────────────────────────────── */
@@ -243,28 +492,30 @@ function renderCards(data) {
     empty.classList.add('hidden');
 
     data.forEach((s, i) => {
+        const t = translations[currentLang];
         const card = document.createElement('div');
         card.className = 'student-card fade-in';
+        card.setAttribute('data-glow', '');
         card.style.animationDelay = `${i * 40}ms`;
         card.innerHTML = `
             <div class="card-header">
                 <div class="card-title-group">
                     <span class="student-name">${s.name}</span>
                     <div class="card-subtitle">
-                        <span class="class-label">Class ${s.cls}</span>
+                        <span class="class-label">${t.class_prefix}${s.cls}</span>
                         <span class="sep">•</span>
-                        <span class="guardian-name">${s.guardian || 'No Guardian'}</span>
+                        <span class="guardian-name">${s.guardian || t.no_guardian}</span>
                     </div>
                 </div>
                 <span class="score-badge ${scoreLevel(s.score)}">${s.score}</span>
             </div>
-            <div class="card-actions-wrapper">
+            <div class="card-actions-wrapper admin-only ${isLevelAdmin() ? '' : 'hidden'}">
                 ${waButton(s.phone)}
-                <div class="admin-actions admin-only ${isLevelAdmin() ? '' : 'hidden'}">
-                    <button class="action-icon-btn edit" onclick="openEditStudentModal(${i})" title="Edit">
+                <div class="admin-actions">
+                    <button class="action-icon-btn edit" onclick="openEditStudentModal(${i})" title="${t.edit_student}">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
                     </button>
-                    <button class="action-icon-btn delete" onclick="deleteStudent(${i})" title="Delete">
+                    <button class="action-icon-btn delete" onclick="deleteStudent(${i})" title="${t.col_actions}">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
@@ -330,14 +581,26 @@ function toggleSidebar() {
 }
 
 /* ── Loading Simulation ──────────────────────────────────────── */
+async function loadLevelData() {
+    await fetchLevelsData();
+    checkAdminVisibility();
+    updateStats();
+    initClassFilter();
+    applySort();
+    render();
+}
+
 function init() {
+    initTheme();
+    applyLanguage(); // Apply saved language
+
     // 1. Load Persisted Level
     const savedLevel = localStorage.getItem('eduTrack_currentLevel') || 'Level 3';
     currentLevel = savedLevel;
     const textEl = document.getElementById('currentLevelText');
-    if (textEl) textEl.textContent = savedLevel;
-    else document.getElementById('currentLevelBtn').textContent = savedLevel;
-    updateTeachers();
+    const t = translations[currentLang];
+    if (textEl) textEl.textContent = savedLevel.replace('Level', t.level_prefix);
+    else document.getElementById('currentLevelBtn').textContent = savedLevel.replace('Level', t.level_prefix);
 
     // Highlight active level in dropdown
     document.querySelectorAll('.level-item').forEach(btn => {
@@ -348,24 +611,13 @@ function init() {
     const defaultTab = 'students';
     const tabLink = document.querySelector(`.sidebar-nav a[data-tab="${defaultTab}"]`);
     if (tabLink) {
-        // Delay to ensure DOM sections are ready
         setTimeout(() => switchTab(defaultTab, tabLink), 50);
     }
 
     // 3. Populate and show
     setTimeout(async () => {
-        await fetchLevelsData(); // Fetch global students data FIRST
-        checkAdminVisibility();
-
-        if (defaultTab === 'students') {
-            updateStats();
-            initClassFilter();
-            // Default sort: score desc
-            const th = document.getElementById('th-score');
-            if (th) th.classList.add('desc');
-            applySort();
-            render();
-        }
+        await loadLevelData();
+        updateTeachers();
         fetchCurriculumData(); // Load custom video links for currentLevel
         initSeek(); // Initialize audio seeking dragging
     }, 600);
@@ -614,15 +866,16 @@ function drawWaveform(canvasId, color1, color2) {
 
 /* ── Tab Switching ──────────────────────────────────────────── */
 function switchTab(tab, linkEl, e) {
+    const t = translations[currentLang];
     if (e) e.preventDefault();
 
     // Update sidebar active state
     document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
     linkEl.classList.add('active');
 
-    let title = 'Students';
-    if (tab === 'content') title = 'Content';
-    if (tab === 'attendance') title = 'Attendance';
+    let title = t.nav_students;
+    if (tab === 'content') title = t.nav_content;
+    if (tab === 'attendance') title = t.nav_attendance;
 
     // Fallback if navTitle inside breadcrumbs or original title
     const titleEl = document.getElementById('navTitle');
@@ -731,6 +984,7 @@ let fileSha = '';
 let curriculumSha = '';
 
 async function loginToGitHub() {
+    const t = translations[currentLang];
     const tokenInput = document.getElementById('ghTokenInput').value.trim();
     const levelPassInput = document.getElementById('levelPassInput').value.trim();
     const btn = document.getElementById('authBtn');
@@ -749,7 +1003,7 @@ async function loginToGitHub() {
 
     // Validate level password first (instant check)
     if (levelPassInput !== levelPasswords[currentLevel]) {
-        err.textContent = 'Invalid level password for ' + currentLevel + '.';
+        err.textContent = t.invalid_credentials;
         err.classList.remove('hidden');
         return;
     }
@@ -783,11 +1037,11 @@ async function loginToGitHub() {
         // Refresh current view
         changeLevel(currentLevel);
     } catch (e) {
-        err.textContent = 'Invalid GitHub token. Please try again.';
+        err.textContent = t.invalid_credentials;
         err.classList.remove('hidden');
     } finally {
         btn.disabled = false;
-        btn.textContent = 'Authenticate';
+        btn.textContent = t.authenticate;
     }
 }
 
@@ -886,6 +1140,7 @@ async function fetchAttendanceData() {
 }
 
 function renderAttendanceGrid(sessionData = null) {
+    const t = translations[currentLang];
     const grid = document.getElementById('attendanceGrid');
     grid.innerHTML = students.map((s, i) => {
         const isPresent = sessionData ? sessionData.present.includes(s.name) : false;
@@ -893,7 +1148,7 @@ function renderAttendanceGrid(sessionData = null) {
                 <label class="attendance-card ${isPresent ? 'present' : ''}" id="attCard_${i}">
                     <div class="attendance-info">
                         <div class="attendance-name">${s.name}</div>
-                        <div class="attendance-class">Class ${s.cls}</div>
+                        <div class="attendance-class">${t.class_prefix}${s.cls}</div>
                     </div>
                     <div class="custom-checkbox">
                         <input type="checkbox" class="hidden-check" id="attCheck_${i}" onchange="toggleAttendanceCard(${i})" ${isPresent ? 'checked' : ''}>
@@ -944,8 +1199,9 @@ function loadSessionData(dateStr) {
 }
 
 async function pushAttendanceData() {
+    const t = translations[currentLang];
     const dt = document.getElementById('attendanceDate').value;
-    if (!dt) return alert("Please select a date first.");
+    if (!dt) return;
 
     const presentIds = [];
     students.forEach((s, idx) => {
@@ -1007,7 +1263,7 @@ async function syncAttendanceToGitHub(commitMessage = 'Update attendance data') 
 
         const msg = document.getElementById('attendanceMessage');
         if (msg) {
-            msg.textContent = "✓ Saved Successfully!";
+            msg.textContent = "✓ " + translations[currentLang].saved_github;
             msg.classList.remove('hidden', 'error-text');
             setTimeout(() => msg.classList.add('hidden'), 4000);
         }
@@ -1015,13 +1271,14 @@ async function syncAttendanceToGitHub(commitMessage = 'Update attendance data') 
         renderAttendanceHistory();
     } catch (e) {
         console.error(e);
+        const t = translations[currentLang];
         const msg = document.getElementById('attendanceMessage');
         if (msg) {
-            msg.textContent = `Error: ${e.message}`;
+            msg.textContent = t.sync_error + e.message;
             msg.classList.remove('hidden');
             msg.style.color = 'var(--danger)'; // Quick inline override for error visibility
         } else {
-            alert(`Failed to sync: ${e.message}`);
+            alert(t.sync_error + e.message);
         }
     } finally {
         btn.disabled = false;
@@ -1033,9 +1290,10 @@ let activeContextDate = null;
 let longPressTimer = null;
 
 function renderAttendanceHistory() {
+    const t = translations[currentLang];
     const list = document.getElementById('attendanceHistory');
     if (!attendanceRecords.length) {
-        list.innerHTML = `<div class="no-data-msg">No session records yet</div>`;
+        list.innerHTML = `<div class="no-data-msg">${t.no_files}</div>`;
         return;
     }
 
@@ -1053,17 +1311,18 @@ function renderAttendanceHistory() {
                         ${r.date}
                     </div>
                     <div class="history-stats">
-                        <span class="present-count">${r.present.length} Present</span>
-                        <span class="absent-count">${r.total - r.present.length} Absent</span>
+                        <span class="present-count">${r.present.length} ${t.present}</span>
+                        <span class="absent-count">${r.total - r.present.length} ${t.absent}</span>
                     </div>
                 </div>
             `).join('');
 }
 
 function showAllResults() {
+    const t = translations[currentLang];
     const grid = document.getElementById('resultsModalGrid');
     if (!attendanceRecords || !attendanceRecords.length) {
-        grid.innerHTML = '<div class="results-empty-msg">No sessions recorded yet.</div>';
+        grid.innerHTML = `<div class="results-empty-msg">${t.no_files}</div>`;
     } else {
         const totalSessions = attendanceRecords.length;
         let html = '';
@@ -1113,9 +1372,10 @@ async function addNewSession() {
     // Use input date if changed, otherwise use today
     const selectedDate = dtInput.value || today;
 
+    const t = translations[currentLang];
     const existing = attendanceRecords.find(r => r.date === selectedDate);
     if (existing) {
-        alert("A session for this date already exists. Loading its data...");
+        alert(t.session_exists);
         loadSessionData(selectedDate);
         return;
     }
@@ -1189,7 +1449,8 @@ function closeContextMenu() {
 
 async function deleteCurrentSession() {
     if (!activeContextDate) return;
-    if (confirm(`Are you sure you want to delete the session for ${activeContextDate}?`)) {
+    const t = translations[currentLang];
+    if (confirm(t.delete_confirm.replace('{date}', activeContextDate))) {
         attendanceRecords = attendanceRecords.filter(r => r.date !== activeContextDate);
 
         if (document.getElementById('attendanceDate').value === activeContextDate) {
@@ -1202,7 +1463,8 @@ async function deleteCurrentSession() {
 
 async function clearCurrentSessionData() {
     if (!activeContextDate) return;
-    if (confirm(`Clear all attendance data for ${activeContextDate}?`)) {
+    const t = translations[currentLang];
+    if (confirm(t.clear_confirm.replace('{date}', activeContextDate))) {
         const record = attendanceRecords.find(r => r.date === activeContextDate);
         if (record) {
             record.present = [];
@@ -1317,11 +1579,12 @@ function removeFile(lessonId, index) {
 }
 
 function updateFileCount(lessonId) {
+    const t = translations[currentLang];
     const el = document.getElementById(`fileCount-${lessonId}`);
     if (!el) return;
 
     const files = uploadedFiles[lessonId] ? uploadedFiles[lessonId].filter(f => f !== null) : [];
-    el.textContent = files.length ? `${files.length} file${files.length > 1 ? 's' : ''}` : 'No files yet';
+    el.textContent = files.length ? `${files.length} file${files.length > 1 ? 's' : ''}` : t.no_files;
     el.style.color = files.length ? 'var(--primary-500)' : '';
 }
 
@@ -1396,12 +1659,13 @@ function transformLessonUI(lessonId, id) {
 
     if (card.querySelector('.lesson-actions-beast')) return;
 
+    const t = translations[currentLang];
     const watchLink = `https://drive.google.com/file/d/${id}/view`;
     const downloadLink = `https://drive.google.com/uc?id=${id}&export=download`;
 
     const infoSpan = card.querySelector('.lesson-file-count');
     if (infoSpan) {
-        infoSpan.textContent = "Video Available";
+        infoSpan.textContent = t.video_available;
         infoSpan.classList.add('video-available');
     }
 
@@ -1419,13 +1683,13 @@ function transformLessonUI(lessonId, id) {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-sm">
                 <path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clip-rule="evenodd" />
             </svg>
-            <span>Watch</span>
+            <span>${t.watch}</span>
         </a>
         <a href="${downloadLink}" target="_blank" rel="noopener noreferrer" class="action-btn-p download">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
             </svg>
-            <span>Download</span>
+            <span>${t.download}</span>
         </a>
     `;
     card.appendChild(actionsDiv);
@@ -1472,13 +1736,14 @@ async function syncCurriculumToGitHub(commitMessage = 'Update curriculum data') 
 }
 
 function promptVideoLink(lessonId) {
-    if (!isLevelAdmin()) return alert("You must be an admin for this level to add video links.");
+    const t = translations[currentLang];
+    if (!isLevelAdmin()) return alert(t.admin_only_error);
 
-    const link = prompt("Enter Google Drive Video Link:");
+    const link = prompt(t.enter_video_link);
     if (!link) return;
 
     const idMatch = link.match(/\/d\/([-\w]{25,})/) || link.match(/id=([-\w]{25,})/);
-    if (!idMatch) return alert("Invalid Google Drive link format.");
+    if (!idMatch) return alert(t.invalid_drive_link);
 
     const id = idMatch[1];
     curriculumData[lessonId] = id;
@@ -1491,9 +1756,10 @@ function promptVideoLink(lessonId) {
 }
 
 function promptQuizLink(lessonId) {
-    if (!isLevelAdmin()) return alert("You must be an admin for this level to add quiz links.");
+    const t = translations[currentLang];
+    if (!isLevelAdmin()) return alert(t.admin_only_error);
 
-    const link = prompt("Enter Quiz Link (Google Form, etc.):");
+    const link = prompt(t.enter_quiz_link);
     if (!link) return;
 
     curriculumData[lessonId] = link;
@@ -1509,9 +1775,10 @@ function transformQuizUI(lessonId, url) {
     const card = document.querySelector(`.lesson-card[data-lesson="${lessonId}"]`);
     if (!card) return;
 
+    const t = translations[currentLang];
     const infoSpan = card.querySelector('.lesson-file-count');
     if (infoSpan) {
-        infoSpan.textContent = "Quiz Ready";
+        infoSpan.textContent = t.quiz_ready;
         infoSpan.classList.add('video-available');
     }
 
@@ -1527,7 +1794,7 @@ function transformQuizUI(lessonId, url) {
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
             </svg>
-            <span>Open Quiz</span>
+            <span>${t.open_quiz}</span>
         </a>
     `;
     card.appendChild(actionsDiv);
@@ -1804,7 +2071,8 @@ async function handleStudentSubmit(e) {
 }
 
 async function deleteStudent(index) {
-    if (!confirm('Are you sure you want to delete this student?')) return;
+    const t = translations[currentLang];
+    if (!confirm(t.delete_student_confirm)) return;
     const name = students[index].name;
     levelsData[currentLevel].splice(index, 1);
     students = levelsData[currentLevel];
@@ -1840,8 +2108,20 @@ function updateTeachers() {
 
     if (t1 && t2 && t3) {
         const teachers = levelTeachers[currentLevel] || ["->", "->", "->"];
-        t1.textContent = teachers[0];
-        t2.textContent = teachers[1];
-        t3.textContent = teachers[2];
+        const t = translations[currentLang];
+        t1.textContent = teachers[0].replace('Mr:', t.mr + ':').replace('Ms:', t.ms + ':');
+        t2.textContent = teachers[1].replace('Mr:', t.mr + ':').replace('Ms:', t.ms + ':');
+        t3.textContent = teachers[2].replace('Mr:', t.mr + ':').replace('Ms:', t.ms + ':');
     }
 }
+
+/* ── Glow Card Pointer Sync ───────────────────────────────────────── */
+document.addEventListener('pointermove', (e) => {
+    document.querySelectorAll('.stat-card[data-glow], .student-card[data-glow], tr[data-glow]').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+    });
+});
